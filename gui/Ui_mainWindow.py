@@ -8,7 +8,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from Ui_aboutDialog import *
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -50,6 +50,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuAyuda.menuAction())
 
         self.retranslateUi(MainWindow)
+        self.pushButton.clicked.connect(self.showAbout)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         data = {
         'Imagen':['20190219-18h00','20190219-18h05','20190219-18h10'], '% procesamiento':['100%','80%','0%']}
@@ -71,6 +72,13 @@ class Ui_MainWindow(object):
         self.actionAcerca_de.setText(_translate("MainWindow", "Acerca de"))
         self.actionTomar_fotos.setText(_translate("MainWindow", "Tomar fotos"))
         self.actionCargar_fotos.setText(_translate("MainWindow", "Cargar fotos"))
+
+    def showAbout(self):
+        Dialog = QtWidgets.QDialog()
+        ui = Ui_Dialog()
+        ui.setupUi(Dialog)
+        Dialog.show()
+       
 
    
 

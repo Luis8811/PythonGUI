@@ -14,6 +14,7 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(279, 135)
+        Dialog.setModal(True)
         self.widget = QtWidgets.QWidget(Dialog)
         self.widget.setGeometry(QtCore.QRect(40, 50, 166, 53))
         self.widget.setObjectName("widget")
