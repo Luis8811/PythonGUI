@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'c:\Users\Alumno\Desktop\PythonExample2\mainWindow.ui'
+# Form implementation generated from reading ui file 'd:\Django y Python\Python_code\GUI_TFM_Normandi\PythonGUI\gui\mainWindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.13.2
+# Created by: PyQt5 UI code generator 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
+
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QDialog,  QMainWindow, QAction
@@ -14,30 +15,26 @@ from Ui_aboutDialog import Ui_AboutDialog
 from Ui_datesDialog import Ui_datesDialog
 from Ui_analysis import Ui_Dialog
 from logic.detection import Detection
-
 import cv2
 import os
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.setFixedSize(800, 600)
+        MainWindow.resize(800, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(160, 310, 75, 23))
-        self.pushButton.setObjectName("pushButton")
-        
+        self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
+        self.gridLayout.setObjectName("gridLayout")
         self.photosTableWidget = QtWidgets.QTableWidget(self.centralwidget)
-        self.photosTableWidget.setGeometry(QtCore.QRect(90, 30, 351, 251))
         self.photosTableWidget.setObjectName("photosTableWidget")
-        self.photosTableWidget.setColumnCount(2)
+        self.photosTableWidget.setColumnCount(0)
         self.photosTableWidget.setRowCount(0)
-        item = QtWidgets.QTableWidgetItem()
-        self.photosTableWidget.setHorizontalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.photosTableWidget.setHorizontalHeaderItem(1, item)
-
+        self.gridLayout.addWidget(self.photosTableWidget, 0, 0, 1, 1)
+        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton.setObjectName("pushButton")
+        self.gridLayout.addWidget(self.pushButton, 1, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 21))
@@ -61,46 +58,32 @@ class Ui_MainWindow(object):
         self.actionCargar_fotos.setShortcut('Ctrl+L')
         self.actionCargar_fotos.setStatusTip('Seleccionar las fotos a cargar')
         self.actionCargar_fotos.triggered.connect(self.selectDateRange)
+        self.menuArchivo.addSeparator()
         self.menuArchivo.addAction(self.actionTomar_fotos)
         self.menuArchivo.addSeparator()
         self.menuArchivo.addAction(self.actionCargar_fotos)
-        self.actionAcerca_de = QAction(QIcon('ojo.png'), 'Ayuda', MainWindow)
+        self.actionAcerca_de = QAction(QIcon('images\\ojo.png'), 'Ayuda', MainWindow)
         self.actionAcerca_de.setShortcut('Ctrl+Q')
         self.actionAcerca_de.setStatusTip('Muestra la ayuda')
         self.actionAcerca_de.triggered.connect(self.showHelp)
         self.menuAyuda.addAction(self.actionAcerca_de)
         self.menubar.addAction(self.menuArchivo.menuAction())
         self.menubar.addAction(self.menuAyuda.menuAction())
+
         self.retranslateUi(MainWindow)
         self.pushButton.clicked.connect(self.getDataFromSelectedRow)
-        
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-        ''' data = {
-        'Imagen':['20190219-18h00','20190219-18h05','20190219-18h10'], '% procesamiento':['100%','80%','0%']}
-        horHeaders = []
-        for n, key in enumerate(data.keys()):
-            horHeaders.append(key)
-            for m, item in enumerate(data[key]):
-                newitem = QtWidgets.QTableWidgetItem(item)
-                self.photosTableWidget.setItem(m, n, newitem)
-        self.photosTableWidget.setHorizontalHeaderLabels(horHeaders)
-        self.photosTableWidget.show() '''
-    
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "Thermal Comfort 1.2"))
-        self.pushButton.setText(_translate("MainWindow", "Aceptar"))
-        item = self.photosTableWidget.horizontalHeaderItem(0)
-        item.setText(_translate("MainWindow", "Imagen Name"))
-        item = self.photosTableWidget.horizontalHeaderItem(1)
-        item.setText(_translate("MainWindow", "% Processing"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Thermal Comfort 1.0"))
+        self.pushButton.setText(_translate("MainWindow", "Procesar imagen"))
         self.menuArchivo.setTitle(_translate("MainWindow", "Archivo"))
         self.menuAyuda.setTitle(_translate("MainWindow", "Ayuda"))
-        self.actionAcerca_de.setText(_translate("MainWindow", "Ayuda"))
+        self.actionAcerca_de.setText(_translate("MainWindow", "Acerca de"))
         self.actionTomar_fotos.setText(_translate("MainWindow", "Tomar fotos"))
         self.actionCargar_fotos.setText(_translate("MainWindow", "Cargar fotos"))
-
+    
     def selectDateRange(self):
         print('Calling selectDateRange>>>>')
         dialog = Dialog(MainWindow)
@@ -124,9 +107,9 @@ class Ui_MainWindow(object):
         about.setupUi(dialog)
         dialog.show()
         rsp = dialog.exec_()
-    
+
     def readDirectory(self, date):
-        files = os.listdir('C:\\Users\\Normandi\\Desktop\\images')
+        files = os.listdir('C:\\Users\\Luis\\Desktop\\images')
         filteredFiles = []
         day = date.day()
         month = date.month()
@@ -161,7 +144,7 @@ class Ui_MainWindow(object):
             self.photosTableWidget.setCellWidget(i, 1, labelImg)
             self.photosTableWidget.scrollToItem(self.photosTableWidget.itemAt(i, 1))
             i+=1
-
+    
     def getDataFromSelectedRow(self):
         selectedRow = self.photosTableWidget.currentRow()
         print('Displaying selected row>>>>>')
@@ -211,15 +194,12 @@ class Ui_MainWindow(object):
         about.setupUi(dialog)
         about.setImage(imageName)
         dialog.show()
-    
-
-
 
 class Dialog(QDialog):
     def __init__(self, *args, **kwargs):
         super(Dialog, self).__init__(*args, **kwargs)
- 
-     
+
+
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
