@@ -1,21 +1,6 @@
 import psycopg2
 import json
 from psycopg2.extras import Json
-# from psycopg2 import Json
-# psycopg2.extensions.register_adapter(dict, psycopg2.extras.Json)
-# import psycopg2.extras.Json
-# psycopg2.extensions.register_adapter(dict, psycopg2.extras.Json)
-# psycopg2.extras.register_default_jsonb(loads=ujson.loads, globally=True)
-
-# Connect to an existing database
-""" conn = psycopg2.connect("host=localhost dbname=countries user=postgres password=postgres")
-
-# Open a cursor to perform database operations
-cur = conn.cursor()
-cur.execute("SELECT* FROM nations")
-for record in cur:
-    print("Country: {}, Capital: {}".format(record[0], record[1]))
-conn.close() """
 
 # Function to print a list
 def printList(message, list):
@@ -23,9 +8,6 @@ def printList(message, list):
     for item in list:
         print(item)
 
-""" class MyJson(Json):
-    def dumps(self, obj):
-        return simplejson.dumps(obj) """
 
 class PostgreSQLDBUtils:
     def __init__(self, host, dbname, user, password):
@@ -33,10 +15,9 @@ class PostgreSQLDBUtils:
         self.dbname = dbname
         self.user = user
         self.password = password
-        # psycopg2.extensions.register_adapter(dict, psycopg2.extras.Json)
     
-    # Inserts a JSON in the table usersjson
-    def insertJSON(self, JSONDoc):
+    # Inserts a  basic data and a JSON in the table countries
+    def insertBasicDataAndJSON(self, basicData1, basicData2, JSONDoc):
         print('Method InsertJSON>>>')
         host = "host=" + self.host
         dbname = "dbname=" + self.dbname
@@ -48,15 +29,7 @@ class PostgreSQLDBUtils:
         print('Connection str: ' + connStr)
         conn = psycopg2.connect(connStr)
         cur = conn.cursor()
-        # sqlCommand = 'INSERT INTO public.usersjson ("user") VALUES (%s);'
-        # strJson ="{'loco':MataDeCoco}"
-        data = {'a': 340}
-        newCountry = 'Japan'
-        newCapital = 'Tokio'
-        sql = "INSERT INTO nations (name, capital) VALUES (%s, %s);"
-        dataInsert = ("Pingon", "Parado")
-        # cur.execute('INSERT INTO nations(name, capital) VALUES (%s, %s);', ['Ping', 'cojone'])
-        cur.execute(sql, dataInsert)
+        cur.execute('INSERT INTO nations(name, capital, info) VALUES (%s, %s, %s);', [basicData1, basicData2, Json(JSONDoc)])
         conn.commit()
         cur.close()
         conn.close()
@@ -78,6 +51,7 @@ class PostgreSQLDBUtils:
         cur.execute(sqlCommand)
         for record in cur:
             results.append(record)
+        cur.close()
         conn.close()
         return results
 
@@ -85,14 +59,10 @@ class PostgreSQLDBUtils:
 
 # Testing
 accessToBD = PostgreSQLDBUtils("localhost", "countries", "postgres", "postgres")
+accessToBD = PostgreSQLDBUtils("localhost", "countries", "postgres", "postgres")
+accessToBD.insertBasicDataAndJSON('Cuba', 'La Habana', {"language" : "Spanish", "currency" : "CUP"})
+accessToBD.insertBasicDataAndJSON('Ecuador', 'Quito', {"language" : "Spanish", "currency" : "USD"})
+accessToBD.insertBasicDataAndJSON('Japón', 'Tokio', {"language" : "Japanese", "currency" : "JPY"})
 listOfCountries = accessToBD.getCountries()
 print('List of countries:', listOfCountries)
-userJSON = '{"name":"Luis Manuel","gender":"Male","age":31}'
-accessToBD = PostgreSQLDBUtils("localhost", "countries", "postgres", "postgres")
-accessToBD.insertJSON(userJSON)
-# y = json.loads(userJSON)
-# text = str(y)
-# print(text)
-# accessToBD.insertJSON('{"s":30}')
-# accessToBD.insertJSON(userJSON)
 
