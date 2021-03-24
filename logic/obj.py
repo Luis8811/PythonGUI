@@ -1,4 +1,6 @@
 from enum import Enum
+import json
+from json import JSONEncoder
 class ObjectDetected:
 
     def __init__(self, label, topLeftX, topLeftY, bottomRightX, bottomRightY, confidence):
@@ -79,4 +81,61 @@ class Object(Enum):
     laptop = 5
     tvmonitor = 6
     keyboard = 7
+
+class Frame:
+    """ Frame from JSON obtained with YoloV4 (Darknet) """
+    def __init__(self, id, filename, objects):
+        self.id = id
+        self.filename = filename
+        self.objects = self.__getObjectsFromFrame(objects)
+    
+    def __getObjectsFromFrame(self, objects):
+        """ Returns a list of ObjectFromFrame"""
+        listOfObjects = []
+        for item in objects:
+            objectFromFrameDetected = ObjectFromFrame(item['name'], item['confidence'])
+            listOfObjects.append(objectFromFrameDetected)
+        
+        print('Displaying frames:')
+        print(listOfObjects)
+        return listOfObjects
+
+    
+    def getId(self):
+        return self.id
+    
+    def setId(self, id):
+        self.id = id
+    
+    def getFilename(self):
+        return self.filename
+    
+    def setFilename(self, filename):
+        self.filename = filename
+    
+    def getObjects(self):
+        """ Returns a list of ObjectFromFrame"""
+        return self.objects
+    
+    def setObjects(self, objects):
+        """ Sets a list of ObjectFromFrame"""
+        self.objects = objects
+
+class ObjectFromFrame:
+    """ Object from Frame in JSON obtained with YoloV4 (Darknet) """
+    def __init__(self, name, confidence):
+        self.name = name
+        self.confidence = confidence
+    
+    def getName(self):
+        return self.name
+    
+    def setName(self, name):
+        self.name = name
+    
+    def getConfidence(self):
+        return self.confidence
+    
+    def setConfidence(self, confidence):
+        self.confidence = confidence
     

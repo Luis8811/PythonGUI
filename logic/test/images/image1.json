@@ -1,0 +1,9 @@
+[
+{
+ "frame_id":1, 
+ "filename":"data/sample_test2/img_000459.jpg", 
+ "objects": [ 
+  {"class_id":1, "name":"person_writing", "relative_coordinates":{"center_x":0.350742, "center_y":0.513962, "width":0.577092, "height":0.831119}, "confidence":0.994842}
+ ] 
+}
+]

@@ -46,7 +46,7 @@ class Ui_datesDialog(object):
         
     def retranslateUi(self, datesDialog):
         _translate = QtCore.QCoreApplication.translate
-        datesDialog.setWindowTitle(_translate("datesDialog", "Seleccionar imàgenes de fecha"))
+        datesDialog.setWindowTitle(_translate("datesDialog", "Seleccionar imágenes de fecha"))
     
     def changedDate(self):
         self.dateEdit.setDate(self.calendarWidget.selectedDate())

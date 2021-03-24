@@ -1,10 +1,10 @@
 import enum
-from logic.obj import ObjectDetected,Object
+from obj import ObjectDetected,Object, Frame, ObjectFromFrame
 import math
 import cv2
 import numpy as np
-from logic.activity import Activity
-from logic.image import Image
+from activity import Activity
+from image import Image
 import json
 from collections import namedtuple
 from json import JSONEncoder
@@ -49,6 +49,28 @@ class Detection:
         objects = []
         imageDetected = Image(height, width, objects)
         return imageDetected
+
+    
+    # Getting frames from JSON obtained with YoloV4 (Darknet)
+    def getFramesFromJSON(jsonOfImageProcessed):
+        """ Function to return the frames from a JSON obtained with YoloV4 (Darknet) """
+        inputFile = open(jsonOfImageProcessed)
+        jsonArray = json.load(inputFile)
+        listOfFrames = []
+        for item in jsonArray:
+            frameDetected = Frame(item['frame_id'], item['filename'], item['objects'])
+            listOfFrames.append(frameDetected)
+        return listOfFrames
+
+    def printFrames(listOfFrames):
+        """ Function to print a list of Frame (logic.obj)"""
+        for item in listOfFrames:
+            print("Frame: " + str(item.getId()) + ">>>")
+            print("Filename: " + item.getFilename())
+            print("Objects:")
+            for currentObject in item.getObjects():
+                print("Name: " + currentObject.getName() + " Confidence: " + str(currentObject.getConfidence()))
+
     
     # Parses JSON of obj
     def detectObjectsFromJSON(jsonOfImageProcessed):
@@ -253,8 +275,14 @@ class Detection:
 # print(distanceBetweenObjects(p1, p2))
 # print(getMetabolicRate(Activity.archive))
 # pathToJson = 'C:\\Users\\Normandi\\Desktop\\sample_person.json'
-pathToImage ='C:\\Users\\Normandi\\Desktop\\20206221850.jpg'
+pathToImage ='C:\\Users\\Luis\\Desktop\\20206221850.jpg'
 imageProcessed = Detection.parseProcessedImage(pathToImage)
 a = Detection()
 print(a.detectActivities(imageProcessed))
 # Detection.printImage(imageProcessed)
+
+# Testing detection from JSON of YoloV4 (Darknet)
+print('TESTING MAPPING OF JSON FROM DARKNET (YOLOV4)')
+pathToJsonYolov4 = 'C:\\Users\\Luis\\Desktop\\processedImages\\result2.json'
+listOfFramesForTest = Detection.getFramesFromJSON(pathToJsonYolov4)
+Detection.printFrames(listOfFramesForTest)
