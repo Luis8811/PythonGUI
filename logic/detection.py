@@ -3,6 +3,8 @@ from obj import ObjectDetected,Object, Frame, ObjectFromFrame
 import math
 import cv2
 import numpy as np
+import sys
+sys.path.append('c:\\Users\\Normandi\\darknet\\ThermalComfortGUI\\PythonGUI\\logic\\thermal_comfort')
 from activity import Activity
 from image import Image
 import json
