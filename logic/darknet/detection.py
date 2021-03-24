@@ -160,8 +160,6 @@ def detectObjectsInImage(INPUT_FILE):
 
     # show the output image
     nameOfImage = getNameOfImage(INPUT_FILE)
-    #newBasePath = 'C:\\Users\\Normandi\\darknet\\data\\sample_test2\\sample_img\\' + nameOfImage
-    #print('Displaying nameOfImage: ' + nameOfImage)
     pos = getPosOfNameOfImage(nameOfImage)
     print('Displaying pos:' + str(pos))
     newPathOfImage = nameOfImage[:pos]
@@ -169,8 +167,7 @@ def detectObjectsInImage(INPUT_FILE):
     print('NewPathOfImage: ' + newPathOfImage)
     cv2.imwrite(newPathOfImage, image)
 
-    # show the image
-    #Show_Image(newPathOfImage)
+    
     
 
 def processAutomatizationDarknet(listOfNotProcessedImages):
@@ -187,10 +184,3 @@ def processAutomatizationDarknet(listOfNotProcessedImages):
         detectObjectsInImage(newImagePath)
     return results
 
-# TESTING 
-listOfFiles = readDirectoryOfImages()
-listOfProcessed = readDirectoryOfProcessedImages()
-print("Not processed")
-listOfNotProcessedImages=processImages(listOfFiles, listOfProcessed)
-print("Processing not processed images...")
-processAutomatizationDarknet(listOfNotProcessedImages)
