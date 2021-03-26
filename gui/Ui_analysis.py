@@ -71,7 +71,7 @@ class Ui_Dialog(object):
         pixmapprocess= QPixmap(processed).scaled(300,200)
         self.processedImageLabel.setPixmap(pixmapprocess)
         self.processedImagePath = processed
-        self.loadResults()
+        #self.loadResults()
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
