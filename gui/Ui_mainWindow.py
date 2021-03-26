@@ -11,10 +11,14 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QDialog,  QMainWindow, QAction, QHeaderView
 from PyQt5.QtCore import QDate, Qt
 from PyQt5.QtGui import QIcon
+''' import sys, os
+print('Displaying sys.path>>>')
+sys.path.append('c:\\Users\\Normandi\\darknet\\ThermalComfortGUI\\PythonGUI\\gui')
+print(sys.path) '''
 from Ui_aboutDialog import Ui_AboutDialog
 from Ui_datesDialog import Ui_datesDialog
 from Ui_analysis import Ui_Dialog
-from logic.detection import Detection
+# from logic.detection import Detection
 import cv2
 import os
 
@@ -112,7 +116,7 @@ class Ui_MainWindow(object):
         rsp = dialog.exec_()
 
     def readDirectory(self, date):
-        files = os.listdir('C:\\Users\\Luis\\Desktop\\images')
+        files = os.listdir('C:\\Users\\Normandi\\darknet\\data\\sample_test2')
         filteredFiles = []
         day = date.day()
         month = date.month()
@@ -137,11 +141,9 @@ class Ui_MainWindow(object):
         self.photosTableWidget.setRowHeight(0, 340)
         i = 0
         for item in images:
-            image = QIcon("202006201830.jpg")
+            image = QIcon("202103261640.jpg")
             currentImageName = QtWidgets.QTableWidgetItem(image, item)
-            # self.photosTableWidget.setRowHeight()
-            dirImg = 'C:\\Users\\Luis\\Desktop\\images\\' + item
-            # pixmap = QtGui.QPixmap("C:\\Users\\Luis\\Desktop\\202006201830.jpg")
+            dirImg = 'C:\\Users\\Normandi\\darknet\\data\\sample_test2\\' + item
             pixmap = QtGui.QPixmap(dirImg)
             pixmapAspect = pixmap.scaled(180, 300, Qt.KeepAspectRatio, Qt.FastTransformation)
             labelImg = QtWidgets.QLabel()

@@ -7,12 +7,12 @@
 # WARNING! All changes made in this file will be lost!
 
 import sys, os
-sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'logic'))
+#sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'logic'))
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon, QPixmap
-from detection import Detection
+#from detection import Detection
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -58,8 +58,8 @@ class Ui_Dialog(object):
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def setImage(self, imageName):
-        originalImagesDirectory = 'C:\\Users\\Luis\\Desktop\\images'
-        processedImagesDirectory ='C:\\Users\\Luis\\Desktop\\processedImages'
+        originalImagesDirectory = 'C:\\Users\\Normandi\\darknet\\data\\sample_test2'
+        processedImagesDirectory ='C:\\Users\\Normandi\\darknet\\data\\sample_test2\\out'
         self.imageName = imageName
         print('Nombre Imagen>>>>>>',self.imageName)
         original = ''
