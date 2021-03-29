@@ -8,10 +8,11 @@
 
 import sys, os
 #sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'logic'))
-
+sys.path.append('C:\\Users\\Normandi\\darknet\\ThermalComfortGUI\\PythonGUI\\logic\\json_darknet_mapper')
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon, QPixmap
+from frame import Frame, ObjectFromFrame, DarknetYoloV4JsonMapper
 #from detection import Detection
 
 class Ui_Dialog(object):
@@ -72,6 +73,7 @@ class Ui_Dialog(object):
         self.processedImageLabel.setPixmap(pixmapprocess)
         self.processedImagePath = processed
         #self.loadResults()
+        self.loadResultsFromJSON('c:\\Users\\Normandi\\darknet\\data\\sample_test2\\out\\20213261710.json')
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
@@ -89,6 +91,7 @@ class Ui_Dialog(object):
    
     # Displays results of processed image
     def loadResults(self):
+        """Deprecated"""
         imageProcessed = Detection.parseProcessedImage(self.getPathOfProcessedImage())
         a = Detection()
         activities = a.detectActivities(imageProcessed)
@@ -107,6 +110,23 @@ class Ui_Dialog(object):
     # Returns the path of the processed image displayed
     def getPathOfProcessedImage(self):
         return self.processedImagePath
+    
+    def loadResultsFromJSON(self, pathOfJSON):
+        """Loads data from JSON obtained with Darknet(Yolo V4)"""
+        listOfFrames = DarknetYoloV4JsonMapper.getFramesFromJSON(pathOfJSON)
+        i = 0
+        for item in listOfFrames:
+            for currentObject in item.getObjects():
+                currentConfidence = currentObject.getConfidence()
+                currentName = currentObject.getName()
+                self.ResultTableWidget.insertRow(i)
+                currentItem = QtWidgets.QTableWidgetItem(currentName)
+                currentItemValue = QtWidgets.QTableWidgetItem(str(currentConfidence))
+                self.ResultTableWidget.setItem(i, 0, currentItem)
+                self.ResultTableWidget.setItem(i, 1, currentItemValue)
+                i += 1
+
+
 
 
 

@@ -178,7 +178,7 @@ class Ui_MainWindow(object):
                 cv2.imshow("Capturing Image", frame) 
                 key = cv2.waitKey(1)
                 if key == ord('s'):
-                    cv2.imwrite('saved_img'+str(i)+'.jpg', frame)
+                    cv2.imwrite('C:\\Users\\Normandi\\darknet\\data\\sample_test2\\'+'saved_img'+str(i)+'.jpg', frame)
                     i += 1
                 elif key == ord('q'):
                     print("Turning off camera.")
