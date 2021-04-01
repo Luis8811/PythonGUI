@@ -193,7 +193,8 @@ def detectObjectsInImage(INPUT_FILE):
             listOfNumpyArray = image.tolist()
             currentFrame = {}
             currentFrame["frame_id"] = 1
-            currentFrame["filename"] = newPathOfImage
+            myFileName = newPathOfImage.replace("\\\\", "\\")
+            currentFrame["filename"] = myFileName
             objectsDetected = getDetectedObjects(myListOfClassIDs, myListOfBoxes, myListOfConfidences, myListOfLabels)
             currentFrame["objects"] = objectsDetected
             my_json_str = json.dump(currentFrame, json_file)
