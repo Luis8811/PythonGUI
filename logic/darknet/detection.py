@@ -172,13 +172,11 @@ def detectObjectsInImage(INPUT_FILE):
     print('Path of Json: ' + pathJson + " >>>>>")
     
     with open(pathJson, 'w') as json_file:
-            #json_file.write(json.dumps(sizeOfImage))
             print('Printing image for JSON>>>>: ')
             print(image)
             print('Print type of image for JSON>>>>:')
             print(type(image))
             listOfNumpyArray = image.tolist()
-            # my_json_str = json.dumps(listOfNumpyArray, json_file)
             print("Confidences:")
             print(confidences)
             print("Boxes:")
@@ -192,18 +190,8 @@ def detectObjectsInImage(INPUT_FILE):
             currentFrame["filename"] = newPathOfImage
             #TODO Fix dictionary currentFrame
             objectsDetected = getDetectedObjects(classIDs, boxes, confidences, LABELS)
-            currentFrame["objects"] = objectsDetected #json.dump(objectsDetected)
-            # TODO To delete
-            print('Printing currentFrame:>>>>')
-            print(currentFrame)
-            print('Printing type of currentFrame:>>>>')
-            print(type(currentFrame))
-            print('Printing my_json_str:>>>>>')
-            my_json_str = json.dumps(currentFrame)
-            print(my_json_str)
-            # TODO End to delete
-            my_json_str2 = json.dump(currentFrame, json_file)
-            #my_json_str = json.dumps(currentFrame)
+            currentFrame["objects"] = objectsDetected
+            my_json_str = json.dump(currentFrame, json_file)
             json_file.close()
 
 def getDetectedObjects(listOfClassIds, listOfBoxes, listOfConfidences, listOfLabels):
@@ -219,17 +207,11 @@ def getDetectedObjects(listOfClassIds, listOfBoxes, listOfConfidences, listOfLab
         newRelativeCoordinates = {}
         newRelativeCoordinates["center_x"] = i
         newRelativeCoordinates["center_y"] = i
+        newRelativeCoordinates["width"] = i
+        newRelativeCoordinates["height"] = i
         newObject["relative_coordinates"] = newRelativeCoordinates
         listOfDetectedObjects.append(newObject)
         i = i + 1
-    #TODO To delete
-    print('Displaying getDetectedObjects >>>>>>>:')
-    print(listOfDetectedObjects)
-    print('Displaying type of the first item in the previous list>>>>>:')
-    print(type(listOfDetectedObjects[0]))
-    print('Displaying type of the list>>>>>:')
-    print(type(listOfDetectedObjects))
-    #TODO End To delete
     return listOfDetectedObjects
 
     
