@@ -142,6 +142,11 @@ def detectObjectsInImage(INPUT_FILE):
     # boxes
     idxs = cv2.dnn.NMSBoxes(boxes, confidences, CONFIDENCE_THRESHOLD,
         CONFIDENCE_THRESHOLD)
+    
+    myListOfClassIDs = []
+    myListOfConfidences = []
+    myListOfLabels = []
+    myListOfBoxes = []
 
     # ensure at least one detection exists
     if len(idxs) > 0:
@@ -157,6 +162,15 @@ def detectObjectsInImage(INPUT_FILE):
             text = "{}: {:.2f}".format(LABELS[classIDs[i]], confidences[i])
             cv2.putText(image, text, (x, y - 5), cv2.FONT_HERSHEY_COMPLEX,
                 0.5, color, 2)
+            myListOfLabels.append(LABELS[classIDs[i]])
+            myListOfConfidences.append(confidences[i])
+            myListOfClassIDs.append(classIDs[i])
+            newBox = {}
+            newBox["x"] = x
+            newBox["y"] = y
+            newBox["w"] = W
+            newBox["h"] = h
+            myListOfBoxes.append(newBox)
 
     # show the output image
     nameOfImage = getNameOfImage(INPUT_FILE)
@@ -189,7 +203,7 @@ def detectObjectsInImage(INPUT_FILE):
             currentFrame["frame_id"] = 1
             currentFrame["filename"] = newPathOfImage
             #TODO Fix dictionary currentFrame
-            objectsDetected = getDetectedObjects(classIDs, boxes, confidences, LABELS)
+            objectsDetected = getDetectedObjects(myListOfClassIDs, myListOfBoxes, myListOfConfidences, myListOfLabels)
             currentFrame["objects"] = objectsDetected
             my_json_str = json.dump(currentFrame, json_file)
             json_file.close()
@@ -205,10 +219,10 @@ def getDetectedObjects(listOfClassIds, listOfBoxes, listOfConfidences, listOfLab
         newObject["class_id"] = str(listOfClassIds[i])
         #TODO Fix How to parse a list with dictionaries to a JSON List?
         newRelativeCoordinates = {}
-        newRelativeCoordinates["center_x"] = i
-        newRelativeCoordinates["center_y"] = i
-        newRelativeCoordinates["width"] = i
-        newRelativeCoordinates["height"] = i
+        newRelativeCoordinates["center_x"] = listOfBoxes[i]["x"]
+        newRelativeCoordinates["center_y"] = listOfBoxes[i]["y"]
+        newRelativeCoordinates["width"] = listOfBoxes[i]["w"]
+        newRelativeCoordinates["height"] = listOfBoxes[i]["h"]
         newObject["relative_coordinates"] = newRelativeCoordinates
         listOfDetectedObjects.append(newObject)
         i = i + 1
