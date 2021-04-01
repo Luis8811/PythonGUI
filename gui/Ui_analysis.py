@@ -17,6 +17,7 @@ from frame import Frame, ObjectFromFrame, DarknetYoloV4JsonMapper
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
+        #TODO Fix the GUI (table of analysis)
         Dialog.setObjectName("Dialog")
         Dialog.resize(700, 500)
         self.originalImageLabel = QtWidgets.QLabel(Dialog)
@@ -73,7 +74,7 @@ class Ui_Dialog(object):
         self.processedImageLabel.setPixmap(pixmapprocess)
         self.processedImagePath = processed
         #self.loadResults()
-        self.loadResultsFromJSON('c:\\Users\\Normandi\\darknet\\data\\sample_test2\\out\\20213261710.json')
+        self.loadResultsFromJSON('c:\\Users\\Normandi\\darknet\\data\\sample_test2\\out\\img_000037.json')
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
@@ -113,18 +114,17 @@ class Ui_Dialog(object):
     
     def loadResultsFromJSON(self, pathOfJSON):
         """Loads data from JSON obtained with Darknet(Yolo V4)"""
-        listOfFrames = DarknetYoloV4JsonMapper.getFramesFromJSON(pathOfJSON)
+        frame = DarknetYoloV4JsonMapper.getFrameFromJSON(pathOfJSON)
         i = 0
-        for item in listOfFrames:
-            for currentObject in item.getObjects():
-                currentConfidence = currentObject.getConfidence()
-                currentName = currentObject.getName()
-                self.ResultTableWidget.insertRow(i)
-                currentItem = QtWidgets.QTableWidgetItem(currentName)
-                currentItemValue = QtWidgets.QTableWidgetItem(str(currentConfidence))
-                self.ResultTableWidget.setItem(i, 0, currentItem)
-                self.ResultTableWidget.setItem(i, 1, currentItemValue)
-                i += 1
+        for currentObject in frame.getObjects():
+            currentConfidence = currentObject.getConfidence()
+            currentName = currentObject.getName()
+            self.ResultTableWidget.insertRow(i)
+            currentItem = QtWidgets.QTableWidgetItem(currentName)
+            currentItemValue = QtWidgets.QTableWidgetItem(str(currentConfidence))
+            self.ResultTableWidget.setItem(i, 0, currentItem)
+            self.ResultTableWidget.setItem(i, 1, currentItemValue)
+            i += 1
 
 
 

@@ -67,6 +67,13 @@ class DarknetYoloV4JsonMapper:
             listOfFrames.append(frameDetected)
         return listOfFrames
 
+    def getFrameFromJSON(jsonOfImageProcessed):
+        """ Function to return the frame from a JSON obtained with YoloV4 (Darknet) """
+        inputFile = open(jsonOfImageProcessed)
+        jsonObject = json.load(inputFile)
+        frameDetected = Frame(jsonObject['frame_id'], jsonObject['filename'], jsonObject['objects'])
+        return frameDetected
+
     def printFrames(listOfFrames):
         """ Function to print a list of Frame """
         for item in listOfFrames:
