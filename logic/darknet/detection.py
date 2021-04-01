@@ -191,18 +191,9 @@ def detectObjectsInImage(INPUT_FILE):
             print('Print type of image for JSON>>>>:')
             print(type(image))
             listOfNumpyArray = image.tolist()
-            print("Confidences:")
-            print(confidences)
-            print("Boxes:")
-            print(boxes)
-            print("ClassIDs")
-            print(classIDs)
-            print("Labels")
-            print(LABELS)
             currentFrame = {}
             currentFrame["frame_id"] = 1
             currentFrame["filename"] = newPathOfImage
-            #TODO Fix dictionary currentFrame
             objectsDetected = getDetectedObjects(myListOfClassIDs, myListOfBoxes, myListOfConfidences, myListOfLabels)
             currentFrame["objects"] = objectsDetected
             my_json_str = json.dump(currentFrame, json_file)
@@ -217,7 +208,6 @@ def getDetectedObjects(listOfClassIds, listOfBoxes, listOfConfidences, listOfLab
         newObject["confidence"] = item
         newObject["name"] =  str(listOfLabels[i])
         newObject["class_id"] = str(listOfClassIds[i])
-        #TODO Fix How to parse a list with dictionaries to a JSON List?
         newRelativeCoordinates = {}
         newRelativeCoordinates["center_x"] = listOfBoxes[i]["x"]
         newRelativeCoordinates["center_y"] = listOfBoxes[i]["y"]
