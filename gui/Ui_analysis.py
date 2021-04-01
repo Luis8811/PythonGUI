@@ -73,8 +73,10 @@ class Ui_Dialog(object):
         pixmapprocess= QPixmap(processed).scaled(300,200)
         self.processedImageLabel.setPixmap(pixmapprocess)
         self.processedImagePath = processed
-        #self.loadResults()
-        self.loadResultsFromJSON('c:\\Users\\Normandi\\darknet\\data\\sample_test2\\out\\img_000037.json')
+        jsonPath = imageName[:len(imageName) - 2]
+        jsonPath = jsonPath + 'son'
+        pathOfJsonImage = processedImagesDirectory + '\\' + jsonPath
+        self.loadResultsFromJSON(pathOfJsonImage)
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
