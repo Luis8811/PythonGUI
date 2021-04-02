@@ -6,21 +6,18 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QDialog,  QMainWindow, QAction, QHeaderView
 from PyQt5.QtCore import QDate, Qt
 from PyQt5.QtGui import QIcon
-''' import sys, os
-print('Displaying sys.path>>>')
-sys.path.append('c:\\Users\\Normandi\\darknet\\ThermalComfortGUI\\PythonGUI\\gui')
-print(sys.path) '''
+import datetime
 from Ui_aboutDialog import Ui_AboutDialog
 from Ui_datesDialog import Ui_datesDialog
 from Ui_analysis import Ui_Dialog
-# from logic.detection import Detection
 import cv2
-import os
+import sys, os
+sys.path.append('C:\\Users\\Normandi\\darknet\\ThermalComfortGUI\\PythonGUI\\logic\\darknet')
+import detection
 
 
 class Ui_MainWindow(object):
@@ -167,6 +164,8 @@ class Ui_MainWindow(object):
         self.showResultAnalysis(imageName)
 
     def takePhotos(self):
+        """Function to take photos"""
+        #TODO Fix to save images and jsons related
         key = cv2. waitKey(1)
         webcam = cv2.VideoCapture(0)
         i = 0
@@ -177,9 +176,14 @@ class Ui_MainWindow(object):
                 print(frame) #prints matrix values of each framecd
                 cv2.imshow("Capturing Image", frame) 
                 key = cv2.waitKey(1)
+                x = datetime.datetime.now()
+                strDate = x.strftime("%Y%m%d%H%M")
                 if key == ord('s'):
-                    cv2.imwrite('C:\\Users\\Normandi\\darknet\\data\\sample_test2\\'+'saved_img'+str(i)+'.jpg', frame)
-                    i += 1
+                    pathOfNewImage = 'C:\\Users\\Normandi\\darknet\\data\\sample_test2\\'+ strDate + '.jpg'
+                    cv2.imwrite(pathOfNewImage, frame)
+                    imageName = strDate + '.jpg'
+                    detection.processAutomatizationDarknet([imageName])
+                    
                 elif key == ord('q'):
                     print("Turning off camera.")
                     webcam.release()
