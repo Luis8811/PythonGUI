@@ -56,6 +56,13 @@ class Ui_MainWindow(object):
         self.actionTomar_fotos = QtWidgets.QAction(MainWindow)
         self.actionTomar_fotos.setObjectName("actionTomar_fotos")
         self.actionTomar_fotos.triggered.connect(self.takePhotos)
+        self.actionTomar_fotos.setStatusTip('Permite tomar fotos manualmente')
+        self.actionTomar_fotos_auto = QtWidgets.QAction(MainWindow)
+        self.actionTomar_fotos_auto.setObjectName("actionTomar_fotos_auto")
+        self.actionTomar_fotos_auto.setStatusTip('Toma fotos cada 5 minutos')
+        #TODO To implement
+        #self.actionTomar_fotos_auto.triggered.connect(self.takePhotosAuto)
+        #TODO End to implement
         self.actionCargar_fotos = QtWidgets.QAction(MainWindow)
         self.actionCargar_fotos.setObjectName("actionCargar_fotos")
         self.actionCargar_fotos = QAction('Cargar fotos', MainWindow)
@@ -64,6 +71,8 @@ class Ui_MainWindow(object):
         self.actionCargar_fotos.triggered.connect(self.selectDateRange)
         self.menuArchivo.addSeparator()
         self.menuArchivo.addAction(self.actionTomar_fotos)
+        self.menuArchivo.addSeparator()
+        self.menuArchivo.addAction(self.actionTomar_fotos_auto)
         self.menuArchivo.addSeparator()
         self.menuArchivo.addAction(self.actionCargar_fotos)
         self.actionAcerca_de = QAction(QIcon('images\\ojo.png'), 'Ayuda', MainWindow)
@@ -85,7 +94,8 @@ class Ui_MainWindow(object):
         self.menuArchivo.setTitle(_translate("MainWindow", "Archivo"))
         self.menuAyuda.setTitle(_translate("MainWindow", "Ayuda"))
         self.actionAcerca_de.setText(_translate("MainWindow", "Acerca de"))
-        self.actionTomar_fotos.setText(_translate("MainWindow", "Tomar fotos"))
+        self.actionTomar_fotos.setText(_translate("MainWindow", "Tomar fotos manualmente"))
+        self.actionTomar_fotos_auto.setText(_translate("MainWindow", "Tomar fotos automáticamente"))
         self.actionCargar_fotos.setText(_translate("MainWindow", "Cargar fotos"))
     
     def selectDateRange(self):
@@ -160,11 +170,10 @@ class Ui_MainWindow(object):
         imageName = self.photosTableWidget.item(selectedRow, 0).text()
         print('Displaying imageName>>>>')
         print(imageName)
-        #percentage = self.photosTableWidget.item(selectedRow, 1).text()
         self.showResultAnalysis(imageName)
 
     def takePhotos(self):
-        """Function to take photos"""
+        """Function to take photos manually"""
         key = cv2. waitKey(1)
         webcam = cv2.VideoCapture(0)
         i = 0
@@ -202,6 +211,10 @@ class Ui_MainWindow(object):
         print("Camera off.")
         print("Program ended.")
         cv2.destroyAllWindows()
+    
+    def takePhotosAuto(self):
+        """Function to take photos every 5 minutes"""
+        #TODO To implement
 
     def showResultAnalysis(self, imageName):
         print('Calling showResultAnalysis>>>>>>>>>>>>')
