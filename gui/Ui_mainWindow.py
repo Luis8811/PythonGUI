@@ -118,9 +118,9 @@ class Ui_MainWindow(object):
         day = date.day()
         month = date.month()
         year = date.year()
-        
+        parsedDate = datetime.datetime(year, month, day)
         patternOfSearch = ""
-        patternOfSearch += str(year) + str(month) + str(day)
+        patternOfSearch += str(year) + parsedDate.strftime("%m") + parsedDate.strftime("%d")
         print('Displaying patternOfSearch: ' + patternOfSearch)
         cont=0
         for item in files:
@@ -165,7 +165,6 @@ class Ui_MainWindow(object):
 
     def takePhotos(self):
         """Function to take photos"""
-        #TODO Fix to save images and jsons related
         key = cv2. waitKey(1)
         webcam = cv2.VideoCapture(0)
         i = 0
