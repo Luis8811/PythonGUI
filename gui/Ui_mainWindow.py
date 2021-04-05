@@ -18,12 +18,15 @@ import cv2
 import sys, os
 sys.path.append('C:\\Users\\Normandi\\darknet\\ThermalComfortGUI\\PythonGUI\\logic\\darknet')
 import detection
+import threading
+import time
 
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
+        self.waitForTakePhotos = False
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
@@ -61,7 +64,7 @@ class Ui_MainWindow(object):
         self.actionTomar_fotos_auto.setObjectName("actionTomar_fotos_auto")
         self.actionTomar_fotos_auto.setStatusTip('Toma fotos cada 5 minutos')
         #TODO To implement
-        #self.actionTomar_fotos_auto.triggered.connect(self.takePhotosAuto)
+        self.actionTomar_fotos_auto.triggered.connect(self.takePhotosAuto)
         #TODO End to implement
         self.actionCargar_fotos = QtWidgets.QAction(MainWindow)
         self.actionCargar_fotos.setObjectName("actionCargar_fotos")
@@ -215,6 +218,53 @@ class Ui_MainWindow(object):
     def takePhotosAuto(self):
         """Function to take photos every 5 minutes"""
         #TODO To implement
+        if self.waitForTakePhotos == False:
+            self.waitForTakePhotos = True
+            process = threading.Thread(target=self.takePhotoWithoutConfirmation)
+            process.start()
+            self.actionTomar_fotos_auto.setText("Detener toma de fotos automáticamente")
+        else:
+            self.waitForTakePhotos = False
+            self.actionTomar_fotos_auto.setText("Tomar fotos automáticamente")
+
+
+    
+    def takePhotoWithoutConfirmation(self):
+        """Function to take a photo without the confirmation of the user"""
+        #TODO To implement
+        while self.waitForTakePhotos == True:
+            time.sleep(60)
+            print("Fecha y hora actual:>>>>")
+            print(datetime.datetime.now())
+            try:
+                webcam = cv2.VideoCapture(0)
+                check, frame = webcam.read()
+                print(check) #prints true as long as the webcam is running
+                print(frame) #prints matrix values of each framecd
+                cv2.imshow("Capturing Image", frame)
+                x = datetime.datetime.now()
+                strDate = x.strftime("%Y%m%d%H%M")
+                pathOfNewImage = 'C:\\Users\\Normandi\\darknet\\data\\sample_test2\\'+ strDate + '.jpg'
+                cv2.imwrite(pathOfNewImage, frame)
+                imageName = strDate + '.jpg'
+                detection.processAutomatizationDarknet([imageName])
+                print("Turning off camera.")
+                webcam.release()
+                print("Camera off.")
+                print("Program ended.")
+                cv2.destroyAllWindows()
+            except(KeyboardInterrupt):
+                print("Turning off camera.")
+                webcam.release()
+                print("Camera off.")
+                print("Program ended.")
+                cv2.destroyAllWindows()
+
+
+
+
+
+
 
     def showResultAnalysis(self, imageName):
         print('Calling showResultAnalysis>>>>>>>>>>>>')
