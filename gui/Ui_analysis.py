@@ -11,6 +11,7 @@ import sys, os
 sys.path.append('C:\\Users\\Normandi\\darknet\\ThermalComfortGUI\\PythonGUI\\logic\\json_darknet_mapper')
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QHeaderView
 from PyQt5.QtGui import QIcon, QPixmap
 from frame import Frame, ObjectFromFrame, DarknetYoloV4JsonMapper
 #from detection import Detection
@@ -41,6 +42,8 @@ class Ui_Dialog(object):
         self.ResultTableWidget.setObjectName("ResultTableWidget")
         self.ResultTableWidget.setColumnCount(2)
         self.ResultTableWidget.setRowCount(0)
+        self.ResultTableWidget.horizontalHeader().setStretchLastSection(True)
+        self.ResultTableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch) 
         item = QtWidgets.QTableWidgetItem()
         self.ResultTableWidget.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
@@ -88,7 +91,7 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Resultado Imágenes"))
+        Dialog.setWindowTitle(_translate("Dialog", "Resultado de procesar la imagen"))
         item = self.ResultTableWidget.horizontalHeaderItem(0)
         item.setText(_translate("Dialog", "Actividad Realizada"))
         item = self.ResultTableWidget.horizontalHeaderItem(1)
