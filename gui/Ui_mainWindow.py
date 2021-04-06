@@ -63,9 +63,7 @@ class Ui_MainWindow(object):
         self.actionTomar_fotos_auto = QtWidgets.QAction(MainWindow)
         self.actionTomar_fotos_auto.setObjectName("actionTomar_fotos_auto")
         self.actionTomar_fotos_auto.setStatusTip('Toma fotos cada 5 minutos')
-        #TODO To implement
         self.actionTomar_fotos_auto.triggered.connect(self.takePhotosAuto)
-        #TODO End to implement
         self.actionCargar_fotos = QtWidgets.QAction(MainWindow)
         self.actionCargar_fotos.setObjectName("actionCargar_fotos")
         self.actionCargar_fotos = QAction('Cargar fotos', MainWindow)
