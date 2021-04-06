@@ -183,8 +183,8 @@ class Ui_MainWindow(object):
         while True:
             try:
                 check, frame = webcam.read()
-                print(check) #prints true as long as the webcam is running
-                print(frame) #prints matrix values of each framecd
+                #print(check) #prints true as long as the webcam is running
+                #print(frame) #prints matrix values of each framecd
                 cv2.imshow("Capturing Image", frame) 
                 key = cv2.waitKey(1)
                 x = datetime.datetime.now()
@@ -196,28 +196,27 @@ class Ui_MainWindow(object):
                     detection.processAutomatizationDarknet([imageName])
                     
                 elif key == ord('q'):
-                    print("Turning off camera.")
+                    #print("Turning off camera.")
                     webcam.release()
-                    print("Camera off.")
-                    print("Program ended.")
+                    #print("Camera off.")
+                    #print("Program ended.")
                     cv2.destroyAllWindows()
                     break
             except(KeyboardInterrupt):
-                print("Turning off camera.")
+                #print("Turning off camera.")
                 webcam.release()
-                print("Camera off.")
-                print("Program ended.")
+                #print("Camera off.")
+                #print("Program ended.")
                 cv2.destroyAllWindows()
                 break
-        print("Turning off camera.")
+        #print("Turning off camera.")
         webcam.release()
-        print("Camera off.")
-        print("Program ended.")
+        #print("Camera off.")
+        #print("Program ended.")
         cv2.destroyAllWindows()
     
     def takePhotosAuto(self):
         """Function to take photos every 5 minutes"""
-        #TODO To implement
         process = threading.Thread(target=self.takePhotoWithoutConfirmation, daemon=True)
         if self.waitForTakePhotos == False:
             self.waitForTakePhotos = True
@@ -237,7 +236,6 @@ class Ui_MainWindow(object):
     
     def takePhotoWithoutConfirmation(self):
         """Function to take a photo without the confirmation of the user"""
-        #TODO To implement
         print("Function takePhotoWithoutConfirmation:>>>>")
         while self.waitForTakePhotos == True:
             
@@ -246,9 +244,9 @@ class Ui_MainWindow(object):
             try:
                 webcam = cv2.VideoCapture(0)
                 check, frame = webcam.read()
-                print(check) #prints true as long as the webcam is running
-                print(frame) #prints matrix values of each framecd
-                time.sleep(10)
+                #print(check) #prints true as long as the webcam is running
+                #print(frame) #prints matrix values of each framecd
+                time.sleep(300)
                 cv2.imshow("Capturing Image", frame)
                 x = datetime.datetime.now()
                 strDate = x.strftime("%Y%m%d%H%M")
@@ -258,16 +256,16 @@ class Ui_MainWindow(object):
                 cv2.imwrite(pathOfNewImage, frame)
                 imageName = strDate + '.jpg'
                 detection.processAutomatizationDarknet([imageName])
-                print("Turning off camera.")
+                #print("Turning off camera.")
                 webcam.release()
-                print("Camera off.")
-                print("Program ended.")
+                #print("Camera off.")
+                #print("Program ended.")
                 cv2.destroyAllWindows()
             except(KeyboardInterrupt):
-                print("Turning off camera.")
+                #print("Turning off camera.")
                 webcam.release()
-                print("Camera off.")
-                print("Program ended.")
+                #print("Camera off.")
+                #print("Program ended.")
                 cv2.destroyAllWindows()
 
 
