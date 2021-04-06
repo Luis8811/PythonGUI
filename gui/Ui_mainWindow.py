@@ -218,32 +218,42 @@ class Ui_MainWindow(object):
     def takePhotosAuto(self):
         """Function to take photos every 5 minutes"""
         #TODO To implement
+        process = threading.Thread(target=self.takePhotoWithoutConfirmation, daemon=True)
         if self.waitForTakePhotos == False:
             self.waitForTakePhotos = True
-            process = threading.Thread(target=self.takePhotoWithoutConfirmation)
             process.start()
             self.actionTomar_fotos_auto.setText("Detener toma de fotos automáticamente")
         else:
             self.waitForTakePhotos = False
             self.actionTomar_fotos_auto.setText("Tomar fotos automáticamente")
+    
+    def closeEvent(self, event):
+        self.waitForTakePhotos = False
+        self.close()
+        sys.exit()
+
 
 
     
     def takePhotoWithoutConfirmation(self):
         """Function to take a photo without the confirmation of the user"""
         #TODO To implement
+        print("Function takePhotoWithoutConfirmation:>>>>")
         while self.waitForTakePhotos == True:
-            time.sleep(60)
-            print("Fecha y hora actual:>>>>")
-            print(datetime.datetime.now())
+            
+            print('Value of self.WaitForTakePhotos: ' + str(self.waitForTakePhotos) + ' >>>>')
+            
             try:
                 webcam = cv2.VideoCapture(0)
                 check, frame = webcam.read()
                 print(check) #prints true as long as the webcam is running
                 print(frame) #prints matrix values of each framecd
+                time.sleep(10)
                 cv2.imshow("Capturing Image", frame)
                 x = datetime.datetime.now()
                 strDate = x.strftime("%Y%m%d%H%M")
+                print("Fecha y hora actual:>>>>")
+                print(strDate)
                 pathOfNewImage = 'C:\\Users\\Normandi\\darknet\\data\\sample_test2\\'+ strDate + '.jpg'
                 cv2.imwrite(pathOfNewImage, frame)
                 imageName = strDate + '.jpg'
