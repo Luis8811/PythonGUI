@@ -17,9 +17,12 @@ from frame import Frame, ObjectFromFrame, DarknetYoloV4JsonMapper
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
-        #TODO Fix the GUI (table of analysis)
         Dialog.setObjectName("Dialog")
         Dialog.resize(700, 500)
+        self.centralwidget = QtWidgets.QWidget(Dialog)
+        self.centralwidget.setObjectName("centralwidget")
+        self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
+        self.gridLayout.setObjectName("gridLayout")
         self.originalImageLabel = QtWidgets.QLabel(Dialog)
         self.originalImageLabel.setGeometry(QtCore.QRect(40, 50, 300, 200))
         self.originalImageLabel.setText("")
@@ -55,7 +58,12 @@ class Ui_Dialog(object):
         self.titleProcessedImageLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.titleProcessedImageLabel.setFont(QtGui.QFont("Arial",14,QtGui.QFont.Bold))
         self.titleProcessedImageLabel.setObjectName("titleOriginalImageLabel")
-
+        self.gridLayout.addWidget(self.titleOriginalImageLabel, 0, 0, 1, 1)
+        self.gridLayout.addWidget(self.titleProcessedImageLabel, 0, 1, 1, 1)
+        self.gridLayout.addWidget(self.originalImageLabel, 1, 0, 1, 1)
+        self.gridLayout.addWidget(self.processedImageLabel, 1, 1, 1, 1)
+        self.gridLayout.addWidget(self.ResultTableWidget, 2, 0, 1, 2)
+        Dialog.setLayout(self.gridLayout)
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
