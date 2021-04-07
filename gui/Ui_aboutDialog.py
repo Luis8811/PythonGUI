@@ -29,7 +29,7 @@ class Ui_AboutDialog(object):
         self.label_3 = QtWidgets.QLabel(self.widget)
         self.label_3.setObjectName("label_3")
         self.verticalLayout.addWidget(self.label_3)
-
+        Dialog.setLayout(self.verticalLayout)
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
