@@ -4,6 +4,7 @@ import cv2
 import matplotlib.pyplot as plt
 import json
 import os
+import datetime
 
 def getNameOfImage(pathOfImage):
     """ Returns the name of the image."""
@@ -15,8 +16,7 @@ def getPosOfNameOfImage(pathOfImage):
     """ Function to get the pos of the name of an image """
     posOfName = pathOfImage.rfind("\\") + 1;
     return posOfName
-    
-
+ 
 def readDirectoryOfProcessedImages():
     """ Function to read the directory of processed images """
     print("Directory of processed")
@@ -39,7 +39,6 @@ def readDirectoryOfImages():
             listOfFiles.append(entry)
     return listOfFiles
     
-
 def processImages(listOfFiles, listOfProcessedFiles):
     """ Function to process the images from a directory not processed before"""
     listOfNotProcessedImages = []
@@ -61,7 +60,6 @@ def Show_Image(path):
     plt.axis("off")
     plt.imshow(cv2.cvtColor(resized_image, cv2.COLOR_BGR2RGB))
     plt.show()
-
 
 def detectObjectsInImage(INPUT_FILE):
     """ Function to detect objects in an image """
@@ -97,9 +95,7 @@ def detectObjectsInImage(INPUT_FILE):
     layerOutputs = net.forward(ln)
     end = time.time()
 
-
     print("[INFO] YOLO took {:.6f} seconds".format(end - start))
-
 
     # initialize our lists of detected bounding boxes, confidences, and
     # class IDs, respectively
@@ -219,9 +215,6 @@ def getDetectedObjects(listOfClassIds, listOfBoxes, listOfConfidences, listOfLab
         i = i + 1
     return listOfDetectedObjects
 
-    
-    
-
 def processAutomatizationDarknet(listOfNotProcessedImages):
     """ Function to detect objects in a list of images. Returns the list of processed images. """
     
@@ -236,3 +229,92 @@ def processAutomatizationDarknet(listOfNotProcessedImages):
         detectObjectsInImage(newImagePath)
     return results
 
+def getListOfActivitiesFromDate(date, directoryOfImages):
+    """Function to get a list of activities from all the images of day"""
+    files = os.listdir(directoryOfImages)
+    listOfActivities = []
+    day = date.day()
+    month = date.month()
+    year = date.year()
+    parsedDate = datetime.datetime(year, month, day)
+    patternOfSearch = ""
+    patternOfSearch += str(year) + parsedDate.strftime("%m") + parsedDate.strftime("%d")
+    for item in files:
+        if patternOfSearch in item and item.endswith(".json"):
+            listOfActivities.extend(getActivitiesFromJSON(item, directoryOfImages))
+    return listOfActivities
+
+def getActivitiesFromJSON(jsonFileName, path):
+    """Get the activities from a JSON"""
+    jsonFilePath = path + '//' + jsonFileName
+    with open(jsonFilePath) as json_file:
+        data = json.load(json_file)
+        listOfObjects = data['objects']
+        print(type(listOfObjects))
+        listOfActivities = []
+        for item in listOfObjects:
+            listOfActivities.append(item['name'])
+        return listOfActivities
+
+    
+
+
+def getCountOfItemInList(listOfItems, item):
+    """Function to get the count of occurrences of item in listOfItems """
+    count = 0
+    for currentItem in listOfItems:
+        if currentItem == item:
+            count += 1
+    return count
+
+def moreFrequentActivities(activities):
+    #Function to return the more frequent activities in the list of activities
+    #TODO To implement (it depends of getListOfActivitiesFromDay)
+     
+    listOfCounts = []
+    listOfDifferentActivities = []
+    listOfResults = []
+    
+    for item in activities:
+        if item not in listOfDifferentActivities:
+            listOfDifferentActivities.append(item)
+
+    print("Lista Original: ",activities)
+    print("Lista Diferente:",listOfDifferentActivities)
+    
+    """for currentActivity in listOfDifferentActivities:
+        listOfCounts.append(getCountOfItemInList(activities, currentActivity))
+    """
+    i = 0
+    for currentActivity in listOfDifferentActivities:
+        listOfCounts[i] = getCountOfItemInList(activities, currentActivity)
+        i += 1
+    nummax = max(listOfCounts)
+    
+    for i in range(0, len(listOfCounts)):
+        if listOfCounts[i] == nummax:
+            listOfResults.append(listOfDifferentActivities[i])
+    #print('Displaying resultados: ', listOfResults)
+    return(listOfResults)
+
+def getNonDetectedActivities(listOfActivities, listOfDifferentActivities):
+    """Function to get the list of activities in listOfDifferentActivities that isn't present in listOfActivities"""
+    result = []
+    for item in listOfDifferentActivities:
+        if item not in listOfActivities:
+            result.append(item)
+    return result
+
+def getTotalOfImages(date):
+    """Function to get the number of images of a date(YYYYMMDD)"""
+    #TODO To implement
+
+
+def getNumberOfImagesWithNoDetectedActivities(date):
+    """Function to get the number of images with no detected activities from a date(YYYYMMDD)"""
+    #TODO To implement
+
+def percentageOfImagesWithNoDetectedActivities(totalOfImages, numberOfImagesWithNoDetectedActivities):
+    """Function that returns the percentage of images with no detected activities"""
+    percentage = (numberOfImagesWithNoDetectedActivities / totalOfImages) * 100
+    return percentage
