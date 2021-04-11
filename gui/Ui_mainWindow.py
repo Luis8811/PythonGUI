@@ -195,6 +195,7 @@ class Ui_MainWindow(object):
             minutesOfImage = item[10:12]
             timeOfImage = hourOfImage + ":" + minutesOfImage 
             currentImageName = QtWidgets.QTableWidgetItem(image, timeOfImage)
+            currentImageName.setTextAlignment(Qt.AlignCenter)
             dirImg = 'C:\\Users\\Normandi\\darknet\\data\\sample_test2\\' + item
             pixmap = QtGui.QPixmap(dirImg)
             pixmapAspect = pixmap.scaled(180, 300, Qt.KeepAspectRatio, Qt.FastTransformation)
@@ -212,16 +213,19 @@ class Ui_MainWindow(object):
         selectedRow = self.photosTableWidget.currentRow()
         print('Displaying selected row>>>>>')
         print(selectedRow)
-        imageName = self.photosTableWidget.item(selectedRow, 0).text()
-        text = self.dateLabel.text()
-       
-        posOfDate = text.find(": ")
-        day = text[posOfDate + 1 + 1: posOfDate + 1 + 3]
-        month = text[posOfDate + 1 + 4: posOfDate + 1  + 6]
-        year = text[posOfDate + 7:]
-        newImageName = year + month + day + imageName[0:2] + imageName[3:] + '.jpg'
-        self.showResultAnalysis(newImageName)
-
+        #TODO
+        if selectedRow != -1 :
+            imageName = self.photosTableWidget.item(selectedRow, 0).text()
+            text = self.dateLabel.text()
+            posOfDate = text.find(": ")
+            day = text[posOfDate + 1 + 1: posOfDate + 1 + 3]
+            month = text[posOfDate + 1 + 4: posOfDate + 1  + 6]
+            year = text[posOfDate + 7:]
+            newImageName = year + month + day + imageName[0:2] + imageName[3:] + '.jpg'
+            self.showResultAnalysis(newImageName)
+        else:
+            print("Seleccione una imagen")
+        #TOEND
     def takePhotos(self):
         """Function to take photos manually"""
         key = cv2. waitKey(1)
@@ -270,7 +274,7 @@ class Ui_MainWindow(object):
             process.start()
             self.actionTomar_fotos_auto.setText("Detener toma de fotos automáticamente")
         else:
-            self.waitForTakePhotos = False
+            self.waitForTakePhotos = True
             self.actionTomar_fotos_auto.setText("Tomar fotos automáticamente")
     
     def closeEvent(self, event):
@@ -278,11 +282,7 @@ class Ui_MainWindow(object):
         self.close()
         sys.exit()
 
-    
-
-
-
-    
+   
     def takePhotoWithoutConfirmation(self):
         """Function to take a photo without the confirmation of the user"""
         print("Function takePhotoWithoutConfirmation:>>>>")
