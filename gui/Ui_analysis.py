@@ -164,21 +164,7 @@ class Ui_Dialog(object):
             self.ResultTableWidget.setItem(i, 2, currentItemValue)
             i += 1
 
-    def getMebatolicRate(self, activity):
-        """Function to get the mebolic rate of an activity"""
-        if activity == 'person_reading':
-            return 1.0
-        if activity == 'person_typing':
-            return 1.1
-        if activity == 'person_writing':
-            return 1.0
-        if activity == 'person_filing_sitting':
-            return 1.2
-        if activity == 'person_filing_standing':
-            return 1.4
-        if activity == 'person_packing':
-            return 2.1
-        return 0.0
+   
 
 
 
