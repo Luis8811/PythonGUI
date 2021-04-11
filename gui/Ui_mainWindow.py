@@ -41,13 +41,13 @@ class Ui_MainWindow(object):
         self.percentageOfImagesWithNoDetectedActivitiesLabel = QtWidgets.QLabel(MainWindow)
         self.percentageOfImagesWithNoDetectedActivitiesLabel.setText("% de imágenes en las que no se detectó actividad:")
         self.averageOfDetectedActivitiesLabel = QtWidgets.QLabel(MainWindow)
-        self.averageOfDetectedActivitiesLabel.setText("Promedio de actividades detectadas por imagen: ")
+        self.averageOfDetectedActivitiesLabel.setText("Promedio de actividades detectadas: ")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName("gridLayout")
         self.photosTableWidget = QtWidgets.QTableWidget(self.centralwidget)
         self.photosTableWidget.setObjectName("photosTableWidget")
         self.photosTableWidget.setColumnCount(2)
-        self.photosTableWidget.setHorizontalHeaderLabels(['Fecha/hora', 'Imagen'])
+        self.photosTableWidget.setHorizontalHeaderLabels(['Hora', 'Imagen'])
         self.photosTableWidget.setRowCount(0)
         self.photosTableWidget.horizontalHeader().setStretchLastSection(True)
         self.photosTableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
@@ -157,19 +157,44 @@ class Ui_MainWindow(object):
             if patternOfSearch in item:
                 filteredFiles.append(item)
                 cont +=1
+        countOfImages = "Cantidad de imágenes: " + str(cont)
+        self.countOfImagesLabel.setText(countOfImages)
                 
         self.photosTableWidget.setRowCount(cont)
         print('Displaying filtered files:')
         print(filteredFiles)
-                
+        newDate ="Fecha de las imágenes: "  + parsedDate.strftime("%d") + "/" + parsedDate.strftime("%m") + "/" + str(year)
+        self.dateLabel.setText(newDate)
+        listOfMoreFrequentActivities = detection.getListOfMoreFrequentActivitiesInDate(date, detection.getPathOfProcessedImages())
+        moreFrequentActivitiesLabel = 'Actividades más frecuentes detectadas: ' + self.parseToStr(listOfMoreFrequentActivities)
+        self.moreFrequentActivitiesLabel.setText(moreFrequentActivitiesLabel)
+        listOfNonDetectedActivities = detection.getNonDetectedActivitiesInDate(date)
+        nonDetectedActivitiesLabel = "Actividades no detectadas: " + self.parseToStr(listOfNonDetectedActivities)
+        self.nonDetectedActivitiesLabel.setText(nonDetectedActivitiesLabel)
+        percentageOfImagesWithNoDetectedActivities = "% de imágenes en las que no se detectó actividad:"
+        valueOfPercentageOfImagesWithNoDetectedActivities = detection.percentageOfImagesWithNoDetectedActivities(date)
+        percentageOfImagesWithNoDetectedActivities += ' ' + str(valueOfPercentageOfImagesWithNoDetectedActivities)
+        self.percentageOfImagesWithNoDetectedActivitiesLabel.setText(percentageOfImagesWithNoDetectedActivities)
+        averageOfDetectedActivities = "Promedio de actividades detectadas: "
+        valueOfAverageOfDetectedActivities = detection.averageOfDetectedActivities(date)
+        averageOfDetectedActivities += str(valueOfAverageOfDetectedActivities)
+        self.averageOfDetectedActivitiesLabel.setText(averageOfDetectedActivities)
         return filteredFiles
+    
+    def parseToStr(self, list):
+        """Returns a string that is a representation of all the items in list"""
+        strRepresentation = ', '.join(list)
+        return strRepresentation
 
     def loadNamesOfImagesFromDirectory(self, images):
         self.photosTableWidget.setRowHeight(0, 340)
         i = 0
         for item in images:
             image = QIcon("202103261640.jpg")
-            currentImageName = QtWidgets.QTableWidgetItem(image, item)
+            hourOfImage = item[8:10]
+            minutesOfImage = item[10:12]
+            timeOfImage = hourOfImage + ":" + minutesOfImage 
+            currentImageName = QtWidgets.QTableWidgetItem(image, timeOfImage)
             dirImg = 'C:\\Users\\Normandi\\darknet\\data\\sample_test2\\' + item
             pixmap = QtGui.QPixmap(dirImg)
             pixmapAspect = pixmap.scaled(180, 300, Qt.KeepAspectRatio, Qt.FastTransformation)
@@ -188,9 +213,30 @@ class Ui_MainWindow(object):
         print('Displaying selected row>>>>>')
         print(selectedRow)
         imageName = self.photosTableWidget.item(selectedRow, 0).text()
+        text = self.dateLabel.text()
+        #TODO to delete
+        print("Displaying type of text:")
+        print(type(text))
+        print("Displaying text:")
+        print(text)
+        posOfDate = text.find(": ")
+        print("Pos of date:")
+        print(posOfDate)
+        print("Printing day: ")
+        day = text[posOfDate + 1 + 1: posOfDate + 1 + 3]
+        print(day)
+        month = text[posOfDate + 1 + 4: posOfDate + 1  + 6]
+        print("Printing month: ")
+        print(month)
+        year = text[posOfDate + 7:]
+        print("Printing year: ")
+        print(year)
+
+        #TODO end to delete
+        newImageName = year + month + day + imageName[0:2] + imageName[3:] + '.jpg'
         print('Displaying imageName>>>>')
-        print(imageName)
-        self.showResultAnalysis(imageName)
+        print(newImageName)
+        self.showResultAnalysis(newImageName)
 
     def takePhotos(self):
         """Function to take photos manually"""
@@ -248,6 +294,8 @@ class Ui_MainWindow(object):
         self.close()
         sys.exit()
 
+    
+
 
 
     
@@ -284,12 +332,6 @@ class Ui_MainWindow(object):
                 #print("Camera off.")
                 #print("Program ended.")
                 cv2.destroyAllWindows()
-
-
-
-
-
-
 
     def showResultAnalysis(self, imageName):
         print('Calling showResultAnalysis>>>>>>>>>>>>')

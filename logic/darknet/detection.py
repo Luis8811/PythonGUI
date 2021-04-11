@@ -6,6 +6,13 @@ import json
 import os
 import datetime
 
+_POSSIBLE_ACTIVITIES = ['person_typing', 'person_reading', 'person_writing', 'person_packing', 'person_filing_standing', 'person_filing_sitting']
+
+def getPathOfProcessedImages():
+    """Returns the path of the processed images"""
+    path = 'C:\\Users\\Normandi\\darknet\\data\\sample_test2\\out'
+    return path
+
 def getNameOfImage(pathOfImage):
     """ Returns the name of the image."""
     posOfName = pathOfImage.rfind("/") + 1;
@@ -229,7 +236,12 @@ def processAutomatizationDarknet(listOfNotProcessedImages):
         detectObjectsInImage(newImagePath)
     return results
 
-def getListOfActivitiesFromDate(date, directoryOfImages):
+def getListOfMoreFrequentActivitiesInDate(date, pathOfJsonOfProcessedImages):
+    """Function to get the list of more frequent activities in a date"""
+    activities = _getListOfActivitiesFromDate(date, pathOfJsonOfProcessedImages)
+    return _moreFrequentActivities(activities)
+
+def _getListOfActivitiesFromDate(date, directoryOfImages):
     """Function to get a list of activities from all the images of day"""
     files = os.listdir(directoryOfImages)
     listOfActivities = []
@@ -241,23 +253,19 @@ def getListOfActivitiesFromDate(date, directoryOfImages):
     patternOfSearch += str(year) + parsedDate.strftime("%m") + parsedDate.strftime("%d")
     for item in files:
         if patternOfSearch in item and item.endswith(".json"):
-            listOfActivities.extend(getActivitiesFromJSON(item, directoryOfImages))
+            listOfActivities.extend(_getActivitiesFromJSON(item, directoryOfImages))
     return listOfActivities
 
-def getActivitiesFromJSON(jsonFileName, path):
+def _getActivitiesFromJSON(jsonFileName, path):
     """Get the activities from a JSON"""
     jsonFilePath = path + '//' + jsonFileName
     with open(jsonFilePath) as json_file:
         data = json.load(json_file)
         listOfObjects = data['objects']
-        print(type(listOfObjects))
         listOfActivities = []
         for item in listOfObjects:
             listOfActivities.append(item['name'])
         return listOfActivities
-
-    
-
 
 def getCountOfItemInList(listOfItems, item):
     """Function to get the count of occurrences of item in listOfItems """
@@ -267,10 +275,8 @@ def getCountOfItemInList(listOfItems, item):
             count += 1
     return count
 
-def moreFrequentActivities(activities):
-    #Function to return the more frequent activities in the list of activities
-    #TODO To implement (it depends of getListOfActivitiesFromDay)
-     
+def _moreFrequentActivities(activities):
+    """Function to get the more frequent activities from a list of activities"""     
     listOfCounts = []
     listOfDifferentActivities = []
     listOfResults = []
@@ -279,25 +285,29 @@ def moreFrequentActivities(activities):
         if item not in listOfDifferentActivities:
             listOfDifferentActivities.append(item)
 
-    print("Lista Original: ",activities)
-    print("Lista Diferente:",listOfDifferentActivities)
-    
-    """for currentActivity in listOfDifferentActivities:
-        listOfCounts.append(getCountOfItemInList(activities, currentActivity))
-    """
-    i = 0
     for currentActivity in listOfDifferentActivities:
-        listOfCounts[i] = getCountOfItemInList(activities, currentActivity)
-        i += 1
+        listOfCounts.append(getCountOfItemInList(activities, currentActivity))
+        
+    if len(listOfCounts) == 0:
+        return []
+
     nummax = max(listOfCounts)
     
     for i in range(0, len(listOfCounts)):
         if listOfCounts[i] == nummax:
             listOfResults.append(listOfDifferentActivities[i])
-    #print('Displaying resultados: ', listOfResults)
     return(listOfResults)
 
-def getNonDetectedActivities(listOfActivities, listOfDifferentActivities):
+
+
+def getNonDetectedActivitiesInDate(date):
+    """Function to get the list of non detected activities"""
+    listOfActivities = _getListOfActivitiesFromDate(date, getPathOfProcessedImages())
+    nonDetectedActivities = _getNonDetectedActivities(listOfActivities, _POSSIBLE_ACTIVITIES)
+    return nonDetectedActivities
+
+
+def _getNonDetectedActivities(listOfActivities, listOfDifferentActivities):
     """Function to get the list of activities in listOfDifferentActivities that isn't present in listOfActivities"""
     result = []
     for item in listOfDifferentActivities:
@@ -305,16 +315,82 @@ def getNonDetectedActivities(listOfActivities, listOfDifferentActivities):
             result.append(item)
     return result
 
-def getTotalOfImages(date):
+def _getTotalOfImages(date):
     """Function to get the number of images of a date(YYYYMMDD)"""
-    #TODO To implement
+    files = os.listdir(getPathOfProcessedImages())
+    day = date.day()
+    month = date.month()
+    year = date.year()
+    parsedDate = datetime.datetime(year, month, day)
+    patternOfSearch = ""
+    patternOfSearch += str(year) + parsedDate.strftime("%m") + parsedDate.strftime("%d")
+    countOfImages = 0
+    for item in files:
+        if item.find(patternOfSearch) != -1 and item.endswith("jpg"):
+            countOfImages += 1
+    return countOfImages
+        
+def _getProcessedImages(date):
+    """Function to get the processed images from a date"""
+    files = os.listdir(getPathOfProcessedImages())
+    images = []
+    day = date.day()
+    month = date.month()
+    year = date.year()
+    parsedDate = datetime.datetime(year, month, day)
+    patternOfSearch = ""
+    patternOfSearch += str(year) + parsedDate.strftime("%m") + parsedDate.strftime("%d")
+    for item in files:
+        if item.endswith('.jpg') and item.find(patternOfSearch) != -1:
+            images.append(item)
+    return images
 
+def _getJsonsOfProcessedImages(date):
+    """Function to get the processed jsons of images from a date"""
+    files = os.listdir(getPathOfProcessedImages())
+    jsons = []
+    day = date.day()
+    month = date.month()
+    year = date.year()
+    parsedDate = datetime.datetime(year, month, day)
+    patternOfSearch = ""
+    patternOfSearch += str(year) + parsedDate.strftime("%m") + parsedDate.strftime("%d")
+    for item in files:
+        if item.endswith('.json') and item.find(patternOfSearch) != -1:
+            jsons.append(item)
+    return jsons
 
-def getNumberOfImagesWithNoDetectedActivities(date):
+def _getNumberOfImagesWithNoDetectedActivities(date):
     """Function to get the number of images with no detected activities from a date(YYYYMMDD)"""
-    #TODO To implement
+    jsons = _getJsonsOfProcessedImages(date)
+    countOfImagesWithNoDetectedActivities = 0
+    for item in jsons:
+        if len(_getActivitiesFromJSON(item, getPathOfProcessedImages())) == 0:
+            countOfImagesWithNoDetectedActivities += 1
+    return countOfImagesWithNoDetectedActivities
 
-def percentageOfImagesWithNoDetectedActivities(totalOfImages, numberOfImagesWithNoDetectedActivities):
+
+
+def _percentageOfImagesWithNoDetectedActivities(totalOfImages, numberOfImagesWithNoDetectedActivities):
     """Function that returns the percentage of images with no detected activities"""
+    if totalOfImages == 0:
+        return 0
     percentage = (numberOfImagesWithNoDetectedActivities / totalOfImages) * 100
-    return percentage
+    return round(percentage, 2)
+
+def percentageOfImagesWithNoDetectedActivities(date):
+    """Function that returns the percentage of images with no detected activities"""
+    totalOfImages = _getTotalOfImages(date)
+    numberOfImagesWithNoDetectedActivities = _getNumberOfImagesWithNoDetectedActivities(date)
+    return _percentageOfImagesWithNoDetectedActivities(totalOfImages, numberOfImagesWithNoDetectedActivities)
+
+def averageOfDetectedActivities(date):
+    """Function to get the average of detected activities from a date"""
+    jsons = _getJsonsOfProcessedImages(date)
+    if len(jsons) == 0:
+        return 0
+    countOfActivitiesDetected = 0
+    for item in jsons:
+        countOfActivitiesDetected += len(_getActivitiesFromJSON(item, getPathOfProcessedImages()))
+    average = countOfActivitiesDetected / len(jsons)
+    return round(average, 2)
