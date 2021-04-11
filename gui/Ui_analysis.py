@@ -9,7 +9,8 @@
 import sys, os
 #sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'logic'))
 sys.path.append('C:\\Users\\Normandi\\darknet\\ThermalComfortGUI\\PythonGUI\\logic\\json_darknet_mapper')
-
+sys.path.append('C:\\Users\\Normandi\\darknet\\ThermalComfortGUI\\PythonGUI\\logic\\darknet')
+import detection
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QHeaderView
 from PyQt5.QtGui import QIcon, QPixmap
@@ -17,6 +18,22 @@ from frame import Frame, ObjectFromFrame, DarknetYoloV4JsonMapper
 #from detection import Detection
 
 class Ui_Dialog(object):
+    def getMetabolicRateA(self, activity):
+         """Function to get the mebolic rate of an activity"""
+         if activity == 'person_reading':
+             return 1.0
+         if activity == 'person_typing':
+             return 1.1
+         if activity == 'person_writing':
+             return 1.0
+         if activity == 'person_filing_sitting':
+             return 1.2
+         if activity == 'person_filing_standing':
+             return 1.4
+         if activity == 'person_packing':
+             return 2.1
+         return 0.0
+
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(700, 500)
@@ -40,7 +57,7 @@ class Ui_Dialog(object):
         self.ResultTableWidget = QtWidgets.QTableWidget(Dialog)
         self.ResultTableWidget.setGeometry(QtCore.QRect(200, 270, 290, 161))
         self.ResultTableWidget.setObjectName("ResultTableWidget")
-        self.ResultTableWidget.setColumnCount(2)
+        self.ResultTableWidget.setColumnCount(3)
         self.ResultTableWidget.setRowCount(0)
         self.ResultTableWidget.horizontalHeader().setStretchLastSection(True)
         self.ResultTableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch) 
@@ -48,6 +65,8 @@ class Ui_Dialog(object):
         self.ResultTableWidget.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
         self.ResultTableWidget.setHorizontalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.ResultTableWidget.setHorizontalHeaderItem(2, item)
         
         self.processedImageLabel = QtWidgets.QLabel(Dialog)
         self.processedImageLabel.setGeometry(QtCore.QRect(370, 50, 300, 200))
@@ -96,6 +115,8 @@ class Ui_Dialog(object):
         item.setText(_translate("Dialog", "Actividad Realizada"))
         item = self.ResultTableWidget.horizontalHeaderItem(1)
         item.setText(_translate("Dialog", "Tasa Metabólica (met)"))
+        item = self.ResultTableWidget.horizontalHeaderItem(2)
+        item.setText(_translate("Dialog", "% confianza en la detección"))
         
         
         for indice, ancho in enumerate((150, 130), start=0):
@@ -131,14 +152,33 @@ class Ui_Dialog(object):
         i = 0
         for currentObject in frame.getObjects():
             currentConfidence = currentObject.getConfidence()
+            currentConfidence = round(currentConfidence, 2)
             currentName = currentObject.getName()
             self.ResultTableWidget.insertRow(i)
             currentItem = QtWidgets.QTableWidgetItem(currentName)
             currentItemValue = QtWidgets.QTableWidgetItem(str(currentConfidence))
+            metRate = self.getMetabolicRateA(currentName)
+            currentMetValue = QtWidgets.QTableWidgetItem(str(metRate))
             self.ResultTableWidget.setItem(i, 0, currentItem)
-            self.ResultTableWidget.setItem(i, 1, currentItemValue)
+            self.ResultTableWidget.setItem(i, 1, currentMetValue)
+            self.ResultTableWidget.setItem(i, 2, currentItemValue)
             i += 1
 
+    def getMebatolicRate(self, activity):
+        """Function to get the mebolic rate of an activity"""
+        if activity == 'person_reading':
+            return 1.0
+        if activity == 'person_typing':
+            return 1.1
+        if activity == 'person_writing':
+            return 1.0
+        if activity == 'person_filing_sitting':
+            return 1.2
+        if activity == 'person_filing_standing':
+            return 1.4
+        if activity == 'person_packing':
+            return 2.1
+        return 0.0
 
 
 

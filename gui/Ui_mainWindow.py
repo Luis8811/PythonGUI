@@ -214,28 +214,12 @@ class Ui_MainWindow(object):
         print(selectedRow)
         imageName = self.photosTableWidget.item(selectedRow, 0).text()
         text = self.dateLabel.text()
-        #TODO to delete
-        print("Displaying type of text:")
-        print(type(text))
-        print("Displaying text:")
-        print(text)
+       
         posOfDate = text.find(": ")
-        print("Pos of date:")
-        print(posOfDate)
-        print("Printing day: ")
         day = text[posOfDate + 1 + 1: posOfDate + 1 + 3]
-        print(day)
         month = text[posOfDate + 1 + 4: posOfDate + 1  + 6]
-        print("Printing month: ")
-        print(month)
         year = text[posOfDate + 7:]
-        print("Printing year: ")
-        print(year)
-
-        #TODO end to delete
         newImageName = year + month + day + imageName[0:2] + imageName[3:] + '.jpg'
-        print('Displaying imageName>>>>')
-        print(newImageName)
         self.showResultAnalysis(newImageName)
 
     def takePhotos(self):
