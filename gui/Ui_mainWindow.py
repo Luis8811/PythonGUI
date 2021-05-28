@@ -295,7 +295,7 @@ class Ui_MainWindow(object):
                 check, frame = webcam.read()
                 #print(check) #prints true as long as the webcam is running
                 #print(frame) #prints matrix values of each framecd
-                time.sleep(300)
+                time.sleep(30)
                 cv2.imshow("Capturing Image", frame)
                 x = datetime.datetime.now()
                 strDate = x.strftime("%Y%m%d%H%M")
