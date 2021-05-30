@@ -8,8 +8,8 @@
 
 import sys, os
 #sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'logic'))
-sys.path.append('C:\\Users\\Normandi\\darknet\\ThermalComfortGUI\\PythonGUI\\logic\\json_darknet_mapper')
-sys.path.append('C:\\Users\\Normandi\\darknet\\ThermalComfortGUI\\PythonGUI\\logic\\darknet')
+sys.path.append('D:\\Back-end\\Django y Python\\Python_code\\Thermal_comfort\\PythonGUI\\logic\\json_darknet_mapper')
+sys.path.append('D:\\Back-end\\Django y Python\\Python_code\\Thermal_comfort\\PythonGUI\\logic\\darknet')
 import detection
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QHeaderView

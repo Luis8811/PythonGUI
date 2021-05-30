@@ -16,7 +16,7 @@ from Ui_datesDialog import Ui_datesDialog
 from Ui_analysis import Ui_Dialog
 import cv2
 import sys, os, subprocess
-sys.path.append('C:\\Users\\Normandi\\darknet\\ThermalComfortGUI\\PythonGUI\\logic\\darknet')
+sys.path.append('D:\\Back-end\\Django y Python\\Python_code\\Thermal_comfort\\PythonGUI\\logic\\darknet')
 import detection
 import threading
 import time
@@ -139,8 +139,7 @@ class Ui_MainWindow(object):
         dialog = Dialog(MainWindow)
         about = Ui_AboutDialog()
         about.setupUi(dialog)
-        #f = open("C:\\Users\\Normandi\\Desktop\\Archivo_ayuda_TFM\\help_tfm.chm", "r") 
-        result = subprocess.Popen("C:\\Users\\Normandi\\Desktop\\Archivo_ayuda_TFM\\help_tfm.chm", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        result = subprocess.Popen("D:\\Back-end\\Django y Python\\Python_code\\Thermal_comfort\\User_guide\\tfm.chm", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output,error = result.communicate()
         print(output)
         dialog.show()
