@@ -8,6 +8,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import Qt
 
 
 class Ui_AboutDialog(object):
@@ -22,14 +23,17 @@ class Ui_AboutDialog(object):
         self.verticalLayout.setObjectName("verticalLayout")
         self.label = QtWidgets.QLabel(self.widget)
         self.label.setObjectName("label")
+        self.label.setAlignment(Qt.AlignCenter)
         self.verticalLayout.addWidget(self.label)
         self.label_2 = QtWidgets.QLabel(self.widget)
         self.label_2.setObjectName("label_2")
+        self.label_2.setAlignment(Qt.AlignCenter)
         self.verticalLayout.addWidget(self.label_2)
         self.label_3 = QtWidgets.QLabel(self.widget)
         self.label_3.setObjectName("label_3")
+        self.label_3.setAlignment(Qt.AlignCenter)
         self.verticalLayout.addWidget(self.label_3)
-
+        Dialog.setLayout(self.verticalLayout)
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 

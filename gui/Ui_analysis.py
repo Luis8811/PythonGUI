@@ -7,17 +7,40 @@
 # WARNING! All changes made in this file will be lost!
 
 import sys, os
-sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'logic'))
-
-
+#sys.path.append(os.path.join(os.path.dirname(sys.path[0]),'logic'))
+sys.path.append('C:\\Users\\Normandi\\darknet\\ThermalComfortGUI\\PythonGUI\\logic\\json_darknet_mapper')
+sys.path.append('C:\\Users\\Normandi\\darknet\\ThermalComfortGUI\\PythonGUI\\logic\\darknet')
+import detection
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QHeaderView
 from PyQt5.QtGui import QIcon, QPixmap
-from detection import Detection
+from frame import Frame, ObjectFromFrame, DarknetYoloV4JsonMapper
+#from detection import Detection
 
 class Ui_Dialog(object):
+    def getMetabolicRateA(self, activity):
+         """Function to get the mebolic rate of an activity"""
+         if activity == 'person_reading':
+             return 1.0
+         if activity == 'person_typing':
+             return 1.1
+         if activity == 'person_writing':
+             return 1.0
+         if activity == 'person_filing_sitting':
+             return 1.2
+         if activity == 'person_filing_standing':
+             return 1.4
+         if activity == 'person_packing':
+             return 2.1
+         return 0.0
+
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(700, 500)
+        self.centralwidget = QtWidgets.QWidget(Dialog)
+        self.centralwidget.setObjectName("centralwidget")
+        self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
+        self.gridLayout.setObjectName("gridLayout")
         self.originalImageLabel = QtWidgets.QLabel(Dialog)
         self.originalImageLabel.setGeometry(QtCore.QRect(40, 50, 300, 200))
         self.originalImageLabel.setText("")
@@ -34,12 +57,16 @@ class Ui_Dialog(object):
         self.ResultTableWidget = QtWidgets.QTableWidget(Dialog)
         self.ResultTableWidget.setGeometry(QtCore.QRect(200, 270, 290, 161))
         self.ResultTableWidget.setObjectName("ResultTableWidget")
-        self.ResultTableWidget.setColumnCount(2)
+        self.ResultTableWidget.setColumnCount(3)
         self.ResultTableWidget.setRowCount(0)
+        self.ResultTableWidget.horizontalHeader().setStretchLastSection(True)
+        self.ResultTableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch) 
         item = QtWidgets.QTableWidgetItem()
         self.ResultTableWidget.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
         self.ResultTableWidget.setHorizontalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.ResultTableWidget.setHorizontalHeaderItem(2, item)
         
         self.processedImageLabel = QtWidgets.QLabel(Dialog)
         self.processedImageLabel.setGeometry(QtCore.QRect(370, 50, 300, 200))
@@ -53,13 +80,18 @@ class Ui_Dialog(object):
         self.titleProcessedImageLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.titleProcessedImageLabel.setFont(QtGui.QFont("Arial",14,QtGui.QFont.Bold))
         self.titleProcessedImageLabel.setObjectName("titleOriginalImageLabel")
-
+        self.gridLayout.addWidget(self.titleOriginalImageLabel, 0, 0, 1, 1)
+        self.gridLayout.addWidget(self.titleProcessedImageLabel, 0, 1, 1, 1)
+        self.gridLayout.addWidget(self.originalImageLabel, 1, 0, 1, 1)
+        self.gridLayout.addWidget(self.processedImageLabel, 1, 1, 1, 1)
+        self.gridLayout.addWidget(self.ResultTableWidget, 2, 0, 1, 2)
+        Dialog.setLayout(self.gridLayout)
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def setImage(self, imageName):
-        originalImagesDirectory = 'C:\\Users\\Luis\\Desktop\\images'
-        processedImagesDirectory ='C:\\Users\\Luis\\Desktop\\processedImages'
+        originalImagesDirectory = 'C:\\Users\\Normandi\\darknet\\data\\sample_test2'
+        processedImagesDirectory ='C:\\Users\\Normandi\\darknet\\data\\sample_test2\\out'
         self.imageName = imageName
         print('Nombre Imagen>>>>>>',self.imageName)
         original = ''
@@ -71,15 +103,20 @@ class Ui_Dialog(object):
         pixmapprocess= QPixmap(processed).scaled(300,200)
         self.processedImageLabel.setPixmap(pixmapprocess)
         self.processedImagePath = processed
-        self.loadResults()
+        jsonPath = imageName[:len(imageName) - 2]
+        jsonPath = jsonPath + 'son'
+        pathOfJsonImage = processedImagesDirectory + '\\' + jsonPath
+        self.loadResultsFromJSON(pathOfJsonImage)
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Resultado Imágenes"))
+        Dialog.setWindowTitle(_translate("Dialog", "Resultado de procesar la imagen"))
         item = self.ResultTableWidget.horizontalHeaderItem(0)
         item.setText(_translate("Dialog", "Actividad Realizada"))
         item = self.ResultTableWidget.horizontalHeaderItem(1)
         item.setText(_translate("Dialog", "Tasa Metabólica (met)"))
+        item = self.ResultTableWidget.horizontalHeaderItem(2)
+        item.setText(_translate("Dialog", "% confianza en la detección"))
         
         
         for indice, ancho in enumerate((150, 130), start=0):
@@ -89,6 +126,7 @@ class Ui_Dialog(object):
    
     # Displays results of processed image
     def loadResults(self):
+        """Deprecated"""
         imageProcessed = Detection.parseProcessedImage(self.getPathOfProcessedImage())
         a = Detection()
         activities = a.detectActivities(imageProcessed)
@@ -107,6 +145,30 @@ class Ui_Dialog(object):
     # Returns the path of the processed image displayed
     def getPathOfProcessedImage(self):
         return self.processedImagePath
+    
+    def loadResultsFromJSON(self, pathOfJSON):
+        """Loads data from JSON obtained with Darknet(Yolo V4)"""
+        frame = DarknetYoloV4JsonMapper.getFrameFromJSON(pathOfJSON)
+        i = 0
+        for currentObject in frame.getObjects():
+            currentConfidence = currentObject.getConfidence()
+            currentConfidence = round(currentConfidence, 2)
+            currentName = currentObject.getName()
+            self.ResultTableWidget.insertRow(i)
+            currentItem = QtWidgets.QTableWidgetItem(currentName)
+            currentItem.setTextAlignment(QtCore.Qt.AlignCenter)
+            currentItemValue = QtWidgets.QTableWidgetItem(str(currentConfidence))
+            currentItemValue.setTextAlignment(QtCore.Qt.AlignCenter)
+            metRate = self.getMetabolicRateA(currentName)
+            currentMetValue = QtWidgets.QTableWidgetItem(str(metRate))
+            currentMetValue.setTextAlignment(QtCore.Qt.AlignCenter)
+            self.ResultTableWidget.setItem(i, 0, currentItem)
+            self.ResultTableWidget.setItem(i, 1, currentMetValue)
+            self.ResultTableWidget.setItem(i, 2, currentItemValue)
+            i += 1
+
+   
+
 
 
 

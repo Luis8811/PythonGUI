@@ -38,10 +38,12 @@ class Ui_datesDialog(object):
         self.verticalLayout_2.addWidget(self.okButtonBox)
         self.calendarWidget.selectionChanged.connect(self.changedDate)
         self.dateEdit.dateChanged.connect(self.changeDateInCalendar)
-
+        datesDialog.setLayout(self.verticalLayout_2)
         self.retranslateUi(datesDialog)
         self.okButtonBox.accepted.connect(datesDialog.accept)
         self.okButtonBox.rejected.connect(datesDialog.reject)
+        
+
         QtCore.QMetaObject.connectSlotsByName(datesDialog)
         
     def retranslateUi(self, datesDialog):
