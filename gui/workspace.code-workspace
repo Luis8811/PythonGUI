@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "..\\.."
+		},
+		{
+			"name": "PythonGUI",
+			"path": ".."
+		}
+	],
+	"settings": {
+		"python.pythonPath": "C:\\Users\\Luis\\AppData\\Local\\Programs\\Python\\Python35\\python.exe"
+	}
+}
