@@ -9,7 +9,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QDialog,  QMainWindow, QAction, QHeaderView
 from PyQt5.QtCore import QDate, Qt
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QFont
 import datetime
 from Ui_aboutDialog import Ui_AboutDialog
 from Ui_datesDialog import Ui_datesDialog
@@ -33,10 +33,16 @@ class Ui_MainWindow(object):
 
         #TODO Modificar Logo
         self.logo = QtWidgets.QLabel(MainWindow)
-        self.pixmap = QtGui.QPixmap('PythonGUI\\images\\logo.png')
-        self.pixmapAspect = self.pixmap.scaled(180, 300, Qt.KeepAspectRatio, Qt.FastTransformation)
-        self.logo.setPixmap(self.pixmapAspect)
+        #self.pixmap = QtGui.QPixmap('PythonGUI\\images\\logo.png')
+        #self.pixmapAspect = self.pixmap.scaled(800, 106, Qt.KeepAspectRatio, Qt.FastTransformation)
+        #self.logo.setPixmap(self.pixmapAspect)
         #self.setAlignment(Qt.AlignCenter)
+        self.logo.setText("Metabolic Rate")
+        self.logoFont = QFont('Arial', 36)
+        self.logoFont.setBold(True)
+        self.logo.setFont(self.logoFont)
+        self.logo.setAlignment(Qt.AlignCenter)
+        self.logo.setStyleSheet("background-color: DodgerBlue; border: 1px double LightSkyBlue; color: white;")
         #TODO End Modificar Logo
         self.dateLabel = QtWidgets.QLabel(MainWindow)
         self.dateLabel.setText("Fecha de las imágenes: ")
