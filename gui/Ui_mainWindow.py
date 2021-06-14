@@ -161,7 +161,7 @@ class Ui_MainWindow(object):
         rsp = dialog.exec_()
 
     def readDirectory(self, date):
-        files = os.listdir('C:\\Users\\Normandi\\darknet\\data\\sample_test2')
+        files = os.listdir('C:\\Users\\Luis\\darknet\\data\\sample_test2')
         filteredFiles = []
         day = date.day()
         month = date.month()
@@ -214,7 +214,7 @@ class Ui_MainWindow(object):
             timeOfImage = hourOfImage + ":" + minutesOfImage 
             currentImageName = QtWidgets.QTableWidgetItem(image, timeOfImage)
             currentImageName.setTextAlignment(Qt.AlignCenter)
-            dirImg = 'C:\\Users\\Normandi\\darknet\\data\\sample_test2\\' + item
+            dirImg = 'C:\\Users\\Luis\\darknet\\data\\sample_test2\\' + item
             pixmap = QtGui.QPixmap(dirImg)
             pixmapAspect = pixmap.scaled(180, 300, Qt.KeepAspectRatio, Qt.FastTransformation)
             labelImg = QtWidgets.QLabel()
@@ -259,7 +259,7 @@ class Ui_MainWindow(object):
                 x = datetime.datetime.now()
                 strDate = x.strftime("%Y%m%d%H%M")
                 if key == ord('s'):
-                    pathOfNewImage = 'C:\\Users\\Normandi\\darknet\\data\\sample_test2\\'+ strDate + '.jpg'
+                    pathOfNewImage = 'C:\\Users\\Luis\\darknet\\data\\sample_test2\\'+ strDate + '.jpg'
                     cv2.imwrite(pathOfNewImage, frame)
                     imageName = strDate + '.jpg'
                     detection.processAutomatizationDarknet([imageName])
@@ -319,7 +319,7 @@ class Ui_MainWindow(object):
                 strDate = x.strftime("%Y%m%d%H%M")
                 print("Fecha y hora actual:>>>>")
                 print(strDate)
-                pathOfNewImage = 'C:\\Users\\Normandi\\darknet\\data\\sample_test2\\'+ strDate + '.jpg'
+                pathOfNewImage = 'C:\\Users\\Luis\\darknet\\data\\sample_test2\\'+ strDate + '.jpg'
                 cv2.imwrite(pathOfNewImage, frame)
                 imageName = strDate + '.jpg'
                 detection.processAutomatizationDarknet([imageName])

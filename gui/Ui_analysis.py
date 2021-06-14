@@ -90,8 +90,8 @@ class Ui_Dialog(object):
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def setImage(self, imageName):
-        originalImagesDirectory = 'C:\\Users\\Normandi\\darknet\\data\\sample_test2'
-        processedImagesDirectory ='C:\\Users\\Normandi\\darknet\\data\\sample_test2\\out'
+        originalImagesDirectory = 'C:\\Users\\Luis\\darknet\\data\\sample_test2'
+        processedImagesDirectory ='C:\\Users\\Luis\\darknet\\data\\sample_test2\\out'
         self.imageName = imageName
         print('Nombre Imagen>>>>>>',self.imageName)
         original = ''

@@ -10,7 +10,7 @@ _POSSIBLE_ACTIVITIES = ['person_typing', 'person_reading', 'person_writing', 'pe
 
 def getPathOfProcessedImages():
     """Returns the path of the processed images"""
-    path = 'C:\\Users\\Normandi\\darknet\\data\\sample_test2\\out'
+    path = 'C:\\Users\\Luis\\darknet\\data\\sample_test2\\out'
     return path
 
 def getNameOfImage(pathOfImage):
@@ -27,7 +27,7 @@ def getPosOfNameOfImage(pathOfImage):
 def readDirectoryOfProcessedImages():
     """ Function to read the directory of processed images """
     print("Directory of processed")
-    basepath = "C:/users/Normandi/darknet/data/sample_test2/out"
+    basepath = "C:/users/Luis/darknet/data/sample_test2/out"
     listOfFiles = []
     for entry in os.listdir(basepath):
         if os.path.isfile(os.path.join(basepath, entry)):
@@ -38,7 +38,7 @@ def readDirectoryOfProcessedImages():
 def readDirectoryOfImages():
     """ Function to read the directory of images """
     print("Directory of images")
-    basepath = "C:/users/Normandi/darknet/data/sample_test2/"
+    basepath = "C:/users/Luis/darknet/data/sample_test2/"
     listOfFiles = []
     for entry in os.listdir(basepath):
         if os.path.isfile(os.path.join(basepath, entry)):
@@ -72,9 +72,9 @@ def detectObjectsInImage(INPUT_FILE):
     """ Function to detect objects in an image """
     print('Function>>>detectObjectsInImage')
     print('Image path: ' + INPUT_FILE)
-    LABELS_FILE='C:\\Users\\Normandi\\darknet\\data\\obj.names'
-    CONFIG_FILE='C:\\Users\\Normandi\\darknet\\cfg\\yolov4-custom.cfg'
-    WEIGHTS_FILE='C:\\users\\Normandi\\darknet\\backup\\yolov4-custom_last.weights'
+    LABELS_FILE='C:\\Users\\Luis\\darknet\\data\\obj.names'
+    CONFIG_FILE='C:\\Users\\Luis\\darknet\\cfg\\yolov4-custom.cfg'
+    WEIGHTS_FILE='C:\\users\\Luis\\darknet\\backup\\yolov4-custom_last.weights'
     CONFIDENCE_THRESHOLD=0.7
     LABELS = open(LABELS_FILE).read().strip().split("\n")
 
