@@ -6,8 +6,10 @@ import json
 import os
 import datetime
 import sys
+import json
 sys.path.append('D:\\Back-end\\Django y Python\\Python_code\\Thermal_comfort\\PythonGUI\\logic\\db')
 from databaseMySQL import MySQLPythonDBController
+from databaseMongo import MongoPythonDBController
 from PIL import Image, ImageDraw, ImageFont # Used to compress images
 
 _POSSIBLE_ACTIVITIES = ['person_typing', 'person_reading', 'person_writing', 'person_packing', 'person_filing_standing', 'person_filing_sitting']
@@ -419,7 +421,7 @@ def averageOfDetectedActivities(date):
     return round(average, 2)
 
 def saveImageInDB(image):
-    """Function to save image and processed image in a MySQL database"""
+    """Function to save image and processed image in a MySQL database and the JSON in a MongoDB database"""
     imagesDB = MySQLPythonDBController("localhost", "office_thermal_comfort", "root", "")
     currentDateTime = datetime.datetime.now()
     compressed_Image = Image.open(image)
@@ -431,4 +433,10 @@ def saveImageInDB(image):
     compressed_processed_image = Image.open(newPathOfImage)
     compressed_processed_image.save("C:\\Users\\Luis\\Desktop\\sample_test2-20210613T140342Z-001\\Compressed\\optimized_processed.jpg", optimize=True, quality=50)
     imagesDB.insertBLOB(currentDateTime, "C:\\Users\\Luis\\Desktop\\sample_test2-20210613T140342Z-001\\Compressed\\optimized.jpg", "C:\\Users\\Luis\\Desktop\\sample_test2-20210613T140342Z-001\\Compressed\\optimized_processed.jpg")
+    mongoDB = MongoPythonDBController("mongodb://localhost:27017/", "detections")
+    pathJson = newPathOfImage[:len(newPathOfImage) - 4]
+    pathJson = pathJson + '.json'
+    with open(pathJson) as json_file:
+        data = json.load(json_file)
+        mongoDB.insertDetection(data)
 
