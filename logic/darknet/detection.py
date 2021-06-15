@@ -5,6 +5,10 @@ import matplotlib.pyplot as plt
 import json
 import os
 import datetime
+import sys
+sys.path.append('D:\\Back-end\\Django y Python\\Python_code\\Thermal_comfort\\PythonGUI\\logic\\db')
+from databaseMySQL import MySQLPythonDBController
+from PIL import Image, ImageDraw, ImageFont # Used to compress images
 
 _POSSIBLE_ACTIVITIES = ['person_typing', 'person_reading', 'person_writing', 'person_packing', 'person_filing_standing', 'person_filing_sitting']
 
@@ -225,7 +229,7 @@ def getDetectedObjects(listOfClassIds, listOfBoxes, listOfConfidences, listOfLab
 def processAutomatizationDarknet(listOfNotProcessedImages):
     """ Function to detect objects in a list of images. Returns the list of processed images. """
     
-    basepath = r'C:\\Users\\Normandi\\darknet\\data\\sample_test2'
+    basepath = r'C:\\Users\\Luis\\darknet\\data\\sample_test2'
     
     # Procesar cada imagen y la ubica en la carpeta out con el mismo nombre    
     results = []
@@ -234,6 +238,9 @@ def processAutomatizationDarknet(listOfNotProcessedImages):
         results.append(newImagePath)
         print(newImagePath)
         detectObjectsInImage(newImagePath)
+        #TODO Quitar
+        saveImageInDB(newImagePath)
+        #TODO Quitar
     return results
 
 def getListOfMoreFrequentActivitiesInDate(date, pathOfJsonOfProcessedImages):
@@ -410,3 +417,18 @@ def averageOfDetectedActivities(date):
         countOfActivitiesDetected += len(_getActivitiesFromJSON(item, getPathOfProcessedImages()))
     average = countOfActivitiesDetected / len(jsons)
     return round(average, 2)
+
+def saveImageInDB(image):
+    """Function to save image and processed image in a MySQL database"""
+    imagesDB = MySQLPythonDBController("localhost", "office_thermal_comfort", "root", "")
+    currentDateTime = datetime.datetime.now()
+    compressed_Image = Image.open(image)
+    compressed_Image.save("C:\\Users\\Luis\\Desktop\\sample_test2-20210613T140342Z-001\\Compressed\\optimized.jpg", optimize=True, quality=50) 
+    nameOfImage = getNameOfImage(image)
+    pos = getPosOfNameOfImage(nameOfImage)
+    newPathOfImage = nameOfImage[:pos]
+    newPathOfImage = newPathOfImage + '\\out\\' + nameOfImage[pos:]
+    compressed_processed_image = Image.open(newPathOfImage)
+    compressed_processed_image.save("C:\\Users\\Luis\\Desktop\\sample_test2-20210613T140342Z-001\\Compressed\\optimized_processed.jpg", optimize=True, quality=50)
+    imagesDB.insertBLOB(currentDateTime, "C:\\Users\\Luis\\Desktop\\sample_test2-20210613T140342Z-001\\Compressed\\optimized.jpg", "C:\\Users\\Luis\\Desktop\\sample_test2-20210613T140342Z-001\\Compressed\\optimized_processed.jpg")
+

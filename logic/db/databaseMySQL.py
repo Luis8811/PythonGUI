@@ -15,8 +15,8 @@ class MySQLPythonDBController:
             binaryData = file.read()
         return binaryData
     
-    def insertBLOB(self, emp_id, name, photo, biodataFile):
-        print("Inserting BLOB into python_employee table")
+    def insertBLOB(self, datetime, image, processed):
+        print("Inserting BLOB into table images")
         try:
             host = 'host=' + self.host
             dbname = 'database=' + self.dbname
@@ -31,17 +31,17 @@ class MySQLPythonDBController:
                                                 user=self.user,
                                                 password=self.password)
             cursor = connection.cursor()
-            sql_insert_blob_query = """ INSERT INTO python_employee
-                            (id, name, photo, biodata) VALUES (%s,%s,%s,%s)"""
+            sql_insert_blob_query = """ INSERT INTO images
+                            (datetime, image, processed) VALUES (%s,%s,%s)"""
 
-            empPicture = self.convertToBinaryData(photo)
-            file = self.convertToBinaryData(biodataFile)
+            empPicture = self.convertToBinaryData(image)
+            file = self.convertToBinaryData(processed)
 
             # Convert data into tuple format
-            insert_blob_tuple = (emp_id, name, empPicture, file)
+            insert_blob_tuple = (datetime, empPicture, file)
             result = cursor.execute(sql_insert_blob_query, insert_blob_tuple)
             connection.commit()
-            print("Image and file inserted successfully as a BLOB into python_employee table", result)
+            print("Image and processed image were inserted successfully as a BLOB into table images", result)
             cursor.close()
             connection.close()
             print("MySQL connection is closed")
@@ -92,7 +92,7 @@ class MySQLPythonDBController:
 
 
 # Testing 
-database = MySQLPythonDBController("localhost", "python_db", "root", "")
-database.insertBLOB(3, "Roberto", "C:\\Users\\Luis\\Desktop\\roberto.jpg", "C:\\Users\\Luis\Desktop\\bio_Roberto.txt")
-database.readBLOB(3, "C:\\Users\\Luis\\Desktop\\Photos\\Roberto.jpg", "C:\\Users\\Luis\\Desktop\\Photos\\bio_Roberto.txt")
+# database = MySQLPythonDBController("localhost", "python_db", "root", "")
+# database.insertBLOB(3, "Roberto", "C:\\Users\\Luis\\Desktop\\roberto.jpg", "C:\\Users\\Luis\Desktop\\bio_Roberto.txt")
+# database.readBLOB(3, "C:\\Users\\Luis\\Desktop\\Photos\\Roberto.jpg", "C:\\Users\\Luis\\Desktop\\Photos\\bio_Roberto.txt")
 
