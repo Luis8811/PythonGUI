@@ -240,9 +240,7 @@ def processAutomatizationDarknet(listOfNotProcessedImages):
         results.append(newImagePath)
         print(newImagePath)
         detectObjectsInImage(newImagePath)
-        #TODO Quitar
         saveImageInDB(newImagePath)
-        #TODO Quitar
     return results
 
 def getListOfMoreFrequentActivitiesInDate(date, pathOfJsonOfProcessedImages):
@@ -434,7 +432,7 @@ def saveImageInDB(image):
     compressed_processed_image.save("C:\\Users\\Luis\\Desktop\\sample_test2-20210613T140342Z-001\\Compressed\\optimized_processed.jpg", optimize=True, quality=50)
     imagesDB.insertBLOB(currentDateTime, "C:\\Users\\Luis\\Desktop\\sample_test2-20210613T140342Z-001\\Compressed\\optimized.jpg", "C:\\Users\\Luis\\Desktop\\sample_test2-20210613T140342Z-001\\Compressed\\optimized_processed.jpg")
     mongoDB = MongoPythonDBController("mongodb://localhost:27017/", "detections")
-    pathJson = newPathOfImage[:len(newPathOfImage) - 4]
+    pathJson = newPathOfImage[:len(newPathOfImage) - 4] 
     pathJson = pathJson + '.json'
     with open(pathJson) as json_file:
         data = json.load(json_file)

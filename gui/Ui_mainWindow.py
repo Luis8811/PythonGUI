@@ -151,14 +151,14 @@ class Ui_MainWindow(object):
     
     def showHelp(self):
         print('Calling showHelp>>>>>>>>>>>>')
-        dialog = Dialog(MainWindow)
-        about = Ui_AboutDialog()
-        about.setupUi(dialog)
+        #dialog = Dialog(MainWindow)
+        #about = Ui_AboutDialog()
+        #about.setupUi(dialog)
         result = subprocess.Popen("D:\\Back-end\\Django y Python\\Python_code\\Thermal_comfort\\User_guide\\tfm.chm", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output,error = result.communicate()
         print(output)
-        dialog.show()
-        rsp = dialog.exec_()
+        #dialog.show()
+        #rsp = dialog.exec_()
 
     def readDirectory(self, date):
         files = os.listdir('C:\\Users\\Luis\\darknet\\data\\sample_test2')
