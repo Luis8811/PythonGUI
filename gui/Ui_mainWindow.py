@@ -153,14 +153,9 @@ class Ui_MainWindow(object):
     
     def showHelp(self):
         print('Calling showHelp>>>>>>>>>>>>')
-        #dialog = Dialog(MainWindow)
-        #about = Ui_AboutDialog()
-        #about.setupUi(dialog)
         result = subprocess.Popen("D:\\Back-end\\Django y Python\\Python_code\\Thermal_comfort\\User_guide\\tfm.chm", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output,error = result.communicate()
         print(output)
-        #dialog.show()
-        #rsp = dialog.exec_()
 
     def readDirectory(self, date):
         files = os.listdir('C:\\Users\\Luis\\darknet\\data\\sample_test2')
@@ -254,8 +249,6 @@ class Ui_MainWindow(object):
         while True:
             try:
                 check, frame = webcam.read()
-                #print(check) #prints true as long as the webcam is running
-                #print(frame) #prints matrix values of each framecd
                 cv2.imshow("Capturing Image", frame) 
                 key = cv2.waitKey(1)
                 x = datetime.datetime.now()
@@ -267,23 +260,14 @@ class Ui_MainWindow(object):
                     detection.processAutomatizationDarknet([imageName])
                     
                 elif key == ord('q'):
-                    #print("Turning off camera.")
                     webcam.release()
-                    #print("Camera off.")
-                    #print("Program ended.")
                     cv2.destroyAllWindows()
                     break
             except(KeyboardInterrupt):
-                #print("Turning off camera.")
                 webcam.release()
-                #print("Camera off.")
-                #print("Program ended.")
                 cv2.destroyAllWindows()
                 break
-        #print("Turning off camera.")
         webcam.release()
-        #print("Camera off.")
-        #print("Program ended.")
         cv2.destroyAllWindows()
     
     def takePhotosAuto(self):
@@ -294,8 +278,19 @@ class Ui_MainWindow(object):
             process.start()
             self.actionTomar_fotos_auto.setText("Detener toma de fotos automáticamente")
         else:
-            self.waitForTakePhotos = True
+            self.waitForTakePhotos = False
             self.actionTomar_fotos_auto.setText("Tomar fotos automáticamente")
+            """ try:
+                #webcam = cv2.VideoCapture(0)
+                #webcam.release()
+                webcam = cv2.VideoCapture(0)
+                if (webcam.isOpened()):
+                  webcam.release()
+                  cv2.destroyAllWindows()
+            except(KeyboardInterrupt):
+                webcam.release()
+                cv2.destroyAllWindows() """
+
     
     def closeEvent(self, event):
         self.waitForTakePhotos = False
@@ -313,8 +308,6 @@ class Ui_MainWindow(object):
             try:
                 webcam = cv2.VideoCapture(0)
                 check, frame = webcam.read()
-                #print(check) #prints true as long as the webcam is running
-                #print(frame) #prints matrix values of each framecd
                 time.sleep(30)
                 cv2.imshow("Capturing Image", frame)
                 x = datetime.datetime.now()
@@ -325,17 +318,12 @@ class Ui_MainWindow(object):
                 cv2.imwrite(pathOfNewImage, frame)
                 imageName = strDate + '.jpg'
                 detection.processAutomatizationDarknet([imageName])
-                #print("Turning off camera.")
                 webcam.release()
-                #print("Camera off.")
-                #print("Program ended.")
                 cv2.destroyAllWindows()
             except(KeyboardInterrupt):
-                #print("Turning off camera.")
                 webcam.release()
-                #print("Camera off.")
-                #print("Program ended.")
                 cv2.destroyAllWindows()
+    
 
     def showResultAnalysis(self, imageName):
         print('Calling showResultAnalysis>>>>>>>>>>>>')

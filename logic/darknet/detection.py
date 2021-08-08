@@ -240,7 +240,7 @@ def processAutomatizationDarknet(listOfNotProcessedImages):
         results.append(newImagePath)
         print(newImagePath)
         detectObjectsInImage(newImagePath)
-        saveImageInDB(newImagePath)
+        #saveImageInDB(newImagePath)
     return results
 
 def getListOfMoreFrequentActivitiesInDate(date, pathOfJsonOfProcessedImages):
